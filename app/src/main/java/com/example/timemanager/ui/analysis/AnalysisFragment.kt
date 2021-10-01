@@ -1,4 +1,4 @@
-package com.example.timemanager.ui.notifications
+package com.example.timemanager.ui.analysis
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,13 +8,12 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.timemanager.R
-import com.example.timemanager.databinding.FragmentNotificationsBinding
+import com.example.timemanager.databinding.FragmentAnalysisBinding
 
-class NotificationsFragment : Fragment() {
+class AnalysisFragment : Fragment() {
 
-    private lateinit var notificationsViewModel: NotificationsViewModel
-    private var _binding: FragmentNotificationsBinding? = null
+    private lateinit var analysisViewModel: AnalysisViewModel
+    private var _binding: FragmentAnalysisBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -24,15 +23,15 @@ class NotificationsFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        notificationsViewModel =
-            ViewModelProvider(this).get(NotificationsViewModel::class.java)
+    ): View {
+        analysisViewModel =
+            ViewModelProvider(this).get(AnalysisViewModel::class.java)
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        _binding = FragmentAnalysisBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textNotifications
-        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
+        val textView: TextView = binding.textAnalysis
+        analysisViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
         return root

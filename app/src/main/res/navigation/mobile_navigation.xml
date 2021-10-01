@@ -3,23 +3,26 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mobile_navigation"
-        app:startDestination="@+id/navigation_home">
+        app:startDestination="@+id/navigation_todo">
 
     <fragment
-            android:id="@+id/navigation_home"
+            android:id="@+id/navigation_todo"
             android:name="com.example.timemanager.ui.home.HomeFragment"
-            android:label="@string/title_home"
-            tools:layout="@layout/fragment_home" />
+            tools:layout="@layout/fragment_home" >
+    </fragment>
 
     <fragment
-            android:id="@+id/navigation_dashboard"
-            android:name="com.example.timemanager.ui.dashboard.DashboardFragment"
-            android:label="@string/title_dashboard"
-            tools:layout="@layout/fragment_dashboard" />
+            android:id="@+id/navigation_analysis"
+            android:name="com.example.timemanager.ui.analysis.AnalysisFragment"
+            tools:layout="@layout/fragment_analysis" />
 
     <fragment
-            android:id="@+id/navigation_notifications"
-            android:name="com.example.timemanager.ui.notifications.NotificationsFragment"
-            android:label="@string/title_notifications"
-            tools:layout="@layout/fragment_notifications" />
+            android:id="@+id/navigation_pet"
+            android:name="com.example.timemanager.ui.pet.PetFragment"
+            tools:layout="@layout/fragment_pet" />
+
+    <fragment
+            android:id="@+id/navigation_setting"
+            android:name="com.example.timemanager.ui.setting.SettingFragment"
+            tools:layout="@layout/fragment_setting" />
 </navigation>

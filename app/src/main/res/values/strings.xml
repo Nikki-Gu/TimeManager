@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TimeManager</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="title_todo">任务</string>
+    <string name="title_analysis">统计</string>
+    <string name="title_pet">宠物</string>
+    <string name="title_setting">设置</string>
 </resources>
