@@ -29,11 +29,15 @@ class SettingFragment : Fragment() {
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val toolbar = binding.homeToolbar
 
-//        val textView: TextView = binding.
-//        settingViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
+        val textView: TextView = binding.textSetting
+        settingViewModel.text.observe(viewLifecycleOwner, Observer {
+            textView.text = it
+        })
+
+        // toolbar设置
+        toolbar.title = "个人设置"
         return root
     }
 

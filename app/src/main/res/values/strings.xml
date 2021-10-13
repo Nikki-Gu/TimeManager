@@ -4,4 +4,8 @@
     <string name="title_analysis">统计</string>
     <string name="title_pet">宠物</string>
     <string name="title_setting">设置</string>
+    <string name="list_setting">属性设置</string>
+    <string name="list_delete">删除清单</string>
+    <string name="list_name">清单列表</string>
+    <string name="list_add_item">添加待办</string>
 </resources>

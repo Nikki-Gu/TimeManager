@@ -6,6 +6,17 @@
         android:layout_height="match_parent"
         tools:context=".ui.pet.PetFragment">
 
+    <androidx.appcompat.widget.Toolbar
+            android:id="@+id/homeToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:titleTextColor="@color/dim_grey"
+            app:popupTheme="@style/ToolbarPopupTheme"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
     <TextView
             android:id="@+id/text_pet"
             android:layout_width="match_parent"

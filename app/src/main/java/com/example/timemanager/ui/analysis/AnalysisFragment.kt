@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentAnalysisBinding
 
 class AnalysisFragment : Fragment() {
@@ -29,11 +30,15 @@ class AnalysisFragment : Fragment() {
 
         _binding = FragmentAnalysisBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val toolbar = binding.homeToolbar
 
         val textView: TextView = binding.textAnalysis
         analysisViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        // toolbar设置
+        toolbar.title = "数据统计"
         return root
     }
 

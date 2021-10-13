@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentPetBinding
 
 class PetFragment : Fragment() {
@@ -29,11 +30,15 @@ class PetFragment : Fragment() {
 
         _binding = FragmentPetBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        val toolbar = binding.homeToolbar
 
         val textView: TextView = binding.textPet
         petViewModel.text.observe(viewLifecycleOwner, Observer {
             textView.text = it
         })
+
+        // toolbar设置
+        toolbar.title = "宠物"
         return root
     }
 
