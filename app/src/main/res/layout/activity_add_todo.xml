@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/black">
+        android:background="@color/white">
 
     <Button
             android:id="@+id/add_todo_back"
@@ -10,9 +11,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:background="@color/black"
+            android:background="@color/white"
             android:text="Back"
-            android:textColor="#fff" />
+            android:textColor="@color/black"
+            app:backgroundTint="@color/white" />
 
     <TextView
             android:id="@+id/add_todo"
@@ -20,9 +22,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="1"
-            android:text="      Add Todo Items"
-            android:background="@color/black"
-            android:textColor="#fff"
+            android:text="@string/list_add_item"
+            android:background="@color/white"
+            android:textColor="@color/black"
             android:textSize="24sp" />
 
 </LinearLayout>

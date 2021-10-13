@@ -6,7 +6,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.analysis.AnalysisFragment">
 
-    <include layout="@layout/statistics" />
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/homeToolbar"
             android:layout_width="match_parent"

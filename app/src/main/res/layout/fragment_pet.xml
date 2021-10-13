@@ -6,7 +6,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.pet.PetFragment">
 
-    <include layout="@layout/pet" />
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/homeToolbar"
             android:layout_width="match_parent"

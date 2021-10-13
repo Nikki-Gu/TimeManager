@@ -11,9 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.timemanager.AddTodoActivity
+import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentHomeBinding
 
-class HomeFragment : Fragment(), View.OnClickListener {
+class HomeFragment : Fragment(){
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
@@ -22,7 +23,6 @@ class HomeFragment : Fragment(), View.OnClickListener {
     // onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,21 +42,17 @@ class HomeFragment : Fragment(), View.OnClickListener {
             textView.text = it
         })
         // toolbar设置
-        // toolbar.setNavigationIcon(R.drawable.ic_setting)
         toolbar.title = "默认清单列表"
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_list_setting)
         toolbar.inflateMenu(R.menu.top_home_menu)
-        toolbar.setNavigationOnClickListener {
-            when(it.id) {
-                R.id.list_add -> {
-                    // Navigate to item settings view
-                    true
-                }
-                else -> false
-            }
-        }
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.list_add -> {
+                    // Navigate to item settings view
+                    val intent = Intent(context, AddTodoActivity::class.java)
+                    startActivity(intent)
+                    true
+                }
                 R.id.list_setting -> {
                     // Navigate to item settings view
                     true
@@ -68,19 +64,8 @@ class HomeFragment : Fragment(), View.OnClickListener {
                 else -> false
             }
         }
-        return root
-    }
-
-
-        // todoListAdd按钮的监听器
-        binding.homeInclude.todoListAdd.setOnClickListener(this)
 
         return root
-    }
-
-    override fun onClick(p0: View?) {
-        val intent = Intent(context, AddTodoActivity::class.java)
-        startActivity(intent)
     }
 
     override fun onDestroyView() {

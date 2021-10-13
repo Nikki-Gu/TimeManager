@@ -6,9 +6,6 @@
         android:layout_height="match_parent"
         tools:context=".ui.home.HomeFragment">
 
-    <include
-            layout="@layout/todo"
-            android:id="@+id/home_include" />
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/homeToolbar"
             android:layout_width="match_parent"
