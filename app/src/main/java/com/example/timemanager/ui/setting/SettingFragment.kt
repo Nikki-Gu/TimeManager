@@ -29,6 +29,11 @@ class SettingFragment : Fragment() {
 
         _binding = FragmentSettingBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+//        val textView: TextView = binding.
+//        settingViewModel.text.observe(viewLifecycleOwner, Observer {
+//            textView.text = it
+//        })
         val toolbar = binding.homeToolbar
 
         val textView: TextView = binding.textSetting

@@ -1,5 +1,6 @@
 package com.example.timemanager.ui.home
 
+import android.content.Intent
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,11 +10,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.timemanager.R
+import com.example.timemanager.AddTodoActivity
 import com.example.timemanager.databinding.FragmentHomeBinding
 
-
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), View.OnClickListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private var _binding: FragmentHomeBinding? = null
@@ -22,6 +22,7 @@ class HomeFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
         val toolbar = binding.homeToolbar
         // textview，后续删掉
         val textView: TextView = binding.textHome
@@ -67,6 +69,18 @@ class HomeFragment : Fragment() {
             }
         }
         return root
+    }
+
+
+        // todoListAdd按钮的监听器
+        binding.homeInclude.todoListAdd.setOnClickListener(this)
+
+        return root
+    }
+
+    override fun onClick(p0: View?) {
+        val intent = Intent(context, AddTodoActivity::class.java)
+        startActivity(intent)
     }
 
     override fun onDestroyView() {

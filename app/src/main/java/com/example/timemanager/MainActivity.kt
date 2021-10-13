@@ -1,6 +1,7 @@
 package com.example.timemanager
 
 import android.os.Bundle
+import androidx.appcompat.app.ActionBar
 import android.view.Window
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,8 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // 隐藏系统自带的标题栏
         supportActionBar?.hide()
 
         val navView: BottomNavigationView = binding.navView

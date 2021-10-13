@@ -6,6 +6,8 @@
         android:layout_height="match_parent"
         tools:context=".ui.setting.SettingFragment">
 
+    <include layout="@layout/setting" />
+
     <androidx.appcompat.widget.Toolbar
             android:id="@+id/homeToolbar"
             android:layout_width="match_parent"

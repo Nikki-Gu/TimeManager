@@ -10,6 +10,9 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.TimeManager_Day">
         <activity
+                android:name=".AddTodoActivity"
+                android:exported="true" />
+        <activity
                 android:name=".MainActivity"
                 android:label="@string/app_name">
             <intent-filter>
