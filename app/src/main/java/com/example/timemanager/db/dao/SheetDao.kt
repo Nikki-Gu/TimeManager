@@ -20,6 +20,10 @@ interface SheetDao {
     @Query("SELECT * FROM Sheet WHERE id = :id")
     fun getSheet(id: Int): Flow<SheetTasksRelation>
 
+    @Transaction
+    @Query("SELECT * FROM Sheet WHERE id = :id")
+    fun getSheetNotFlow(id: Int): SheetTasksRelation
+
     @Query("SELECT * FROM Sheet ORDER BY id ASC")
     fun getSheets(): Flow<List<SheetEntity>>
 

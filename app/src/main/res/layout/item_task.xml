@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="81dp">
+
+        <com.google.android.material.card.MaterialCardView
+                android:id="@+id/task_card"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/card_margin"
+                android:clickable="true"
+                android:focusable="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                <CheckBox
+                        android:id="@+id/check_box"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="12dp"
+                        android:checked="true"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/task_name_text_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        app:layout_constraintBottom_toBottomOf="@id/check_box"
+                        app:layout_constraintEnd_toStartOf="@id/edit_task_button"
+                        app:layout_constraintStart_toEndOf="@id/check_box"
+                        app:layout_constraintTop_toTopOf="@id/check_box"
+                        tools:text="@tools:sample/lorem/random" />
+
+                <ImageButton
+                        android:id="@+id/edit_task_button"
+                        android:layout_width="@dimen/image_button_large_size"
+                        android:layout_height="@dimen/image_button_large_size"
+                        android:layout_marginEnd="8dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/delete_task_button"
+                        android:src="@drawable/ic_baseline_edit_24"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:tint="?attr/colorSecondary" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </FrameLayout>
+</layout>

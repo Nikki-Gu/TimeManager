@@ -32,4 +32,6 @@
     <color name="lime">#cddc39</color>
     <color name="brown">#795548</color>
     <color name="gray">#8A8A8A</color>
+
+    <color name="colorError">#b61827</color>
 </resources>

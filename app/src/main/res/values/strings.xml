@@ -8,4 +8,9 @@
     <string name="list_delete">删除清单</string>
     <string name="list_name">清单列表</string>
     <string name="list_add_item">添加待办</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="no_tasks" />
+    <string name="task_tag_color">task_tag_color</string>
+    <string name="delete_task_button">delete_task_button</string>
 </resources>
