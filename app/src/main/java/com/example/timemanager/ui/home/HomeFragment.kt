@@ -130,14 +130,14 @@ class HomeFragment : Fragment(){
     //@ExperimentalCoroutinesApi
     private fun initSheetSelectedObserver() {
         val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheetNotFlow(1).toDomain()
-        val list = sheet!!.tasks
-        if (list.isEmpty()) {
+        val list = sheet?.tasks
+        if (list?.isEmpty() == true) {
             showEmptyListIllustration()
         } else {
             hideEmptyListIllustration()
         }
         tasksAdapter.submitList(list)
-        setProgressValue(getTasksDoneProgress(list))
+        list?.let { getTasksDoneProgress(it) }?.let { setProgressValue(it) }
 
 //        homeViewModel.sheetSelected.observe(
 //            viewLifecycleOwner,

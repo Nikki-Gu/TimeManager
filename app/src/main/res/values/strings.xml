@@ -10,7 +10,7 @@
     <string name="list_add_item">添加待办</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="no_tasks" />
+    <string name="no_tasks">清单空空如也，点击加号添加待办</string>
     <string name="task_tag_color">task_tag_color</string>
     <string name="delete_task_button">delete_task_button</string>
     <string name="task_name">名称</string>

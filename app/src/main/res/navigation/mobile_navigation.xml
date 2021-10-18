@@ -32,5 +32,6 @@
     <fragment
             android:id="@+id/navigation_add_task"
             android:name="com.example.timemanager.ui.AddTaskFragment"
+            android:label="@string/list_add_item"
             tools:layout="@layout/add_task_fragment" />
 </navigation>
