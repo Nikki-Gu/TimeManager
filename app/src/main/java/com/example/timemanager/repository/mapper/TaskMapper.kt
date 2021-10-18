@@ -11,7 +11,12 @@ object TaskMapper {
             description = it.description,
             state = it.state,
             tag = it.tag,
-            sheetId = it.sheetId
+            sheetId = it.sheetId,
+            startDate = it.startDate,
+            endDate = it.endDate,
+            rank = it.rank,
+            repeatTimes = it.repeatTimes,
+            frequency = it.frequency
         )
     }
 
@@ -22,7 +27,12 @@ object TaskMapper {
             description = it.description,
             state = it.state,
             tag = it.tag,
-            sheetId = it.sheetId
+            sheetId = it.sheetId,
+            startDate = it.startDate,
+            endDate = it.endDate,
+            rank = it.rank,
+            repeatTimes = it.repeatTimes,
+            frequency = it.frequency
         )
     }
 }

@@ -10,7 +10,9 @@ object SheetMapper {
         Sheet(
             id = it.id,
             name = it.name,
-            description = it.description
+            description = it.description,
+            sheetClass = it.sheetClass,
+            rate = it.rate
         )
     }
 
@@ -19,6 +21,8 @@ object SheetMapper {
             id = it.sheet.id,
             name = it.sheet.name,
             description = it.sheet.description,
+            sheetClass = it.sheet.sheetClass,
+            rate = it.sheet.rate,
             tasks = it.tasks.map { task -> task.toDomain() }.sortedBy { task -> task?.state }
         )
     }
@@ -27,7 +31,9 @@ object SheetMapper {
         SheetEntity(
             id = it.id,
             name = it.name,
-            description = it.description
+            description = it.description,
+            sheetClass = it.sheetClass,
+            rate = it.rate
         )
     }
 }

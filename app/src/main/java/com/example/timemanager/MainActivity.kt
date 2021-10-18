@@ -40,10 +40,11 @@ class MainActivity : AppCompatActivity() {
         val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
         val sheet = Sheet(
             id = 1,
-            name = "默认清单列表",
-            description =  "默认的第一个清单"
+            name = "默认清单列表测试_byMirack",
+            description = null,
+            sheetClass = "测试类别"
         )
-        sheet.toEntity()?.let { sheetDao.insertSheet(it)}
+        sheet.toEntity()?.let { sheetDao.insertSheet(it) }
         //insert数据
         for (i in (0 until 10)) {
             val task = Task(
@@ -52,7 +53,10 @@ class MainActivity : AppCompatActivity() {
                 description = null,
                 state = TaskState.DOING,
                 sheetId = 1,
-                tag = null
+                tag = null,
+                startDate = 123,
+                endDate = 123,
+                rank = "重要紧急"
             )
             task.toEntity()?.let { taskDao.insertTask(it) }
         }
