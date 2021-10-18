@@ -13,4 +13,10 @@
     <string name="no_tasks" />
     <string name="task_tag_color">task_tag_color</string>
     <string name="delete_task_button">delete_task_button</string>
+    <string name="task_name">名称</string>
+    <string name="task_enter_name">标题</string>
+    <string name="task_tag">属性</string>
+    <string name="task_description">描述</string>
+    <string name="must_be_not_empty">待办名称不能为空</string>
+    <string name="add">添加完成</string>
 </resources>
