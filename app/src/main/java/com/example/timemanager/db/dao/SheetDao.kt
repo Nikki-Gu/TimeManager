@@ -18,16 +18,19 @@ interface SheetDao {
 
     @Transaction
     @Query("SELECT * FROM Sheet WHERE id = :id")
-    fun getSheet(id: Int): Flow<SheetTasksRelation>
+    fun getSheet(id: Int): SheetTasksRelation
+//    fun getSheet(id: Int): Flow<SheetTasksRelation>
 
     @Query("SELECT * FROM Sheet WHERE name = :name")
-    fun getSheetByName(name: String): Flow<SheetTasksRelation>
+    fun getSheetByName(name: String): SheetTasksRelation
+//    fun getSheetByName(name: String): Flow<SheetTasksRelation>
 
     @Query("SELECT * FROM Sheet ORDER BY id ASC")
-    fun getSheets(): Flow<List<SheetEntity>>
+    fun getSheets(): List<SheetTasksRelation>
+//    fun getSheets(): Flow<List<SheetEntity>>
 
     @Query("DELETE FROM Sheet WHERE id = :id")
-    suspend fun deleteSheet(id: Int)
+    fun deleteSheet(id: Int): Int
 
     @Update
     suspend fun updateSheet(sheet: SheetEntity)
