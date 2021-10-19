@@ -82,7 +82,10 @@ class AddTaskFragment : Fragment(){
             description = description,
             state = TaskState.DOING,
             sheetId = 1,
-            tag = null
+            tag = null,
+            startDate = 123,
+            endDate = 123,
+            rank = "重要紧急"
         )
         activity?.let {
             task.toEntity()?.let { it1 ->
