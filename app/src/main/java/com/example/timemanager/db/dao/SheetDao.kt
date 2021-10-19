@@ -24,6 +24,9 @@ interface SheetDao {
     @Query("SELECT * FROM Sheet WHERE id = :id")
     fun getSheetNotFlow(id: Int): SheetTasksRelation
 
+    @Query("SELECT * FROM Sheet WHERE name = :name")
+    fun getSheetByName(name: String): Flow<SheetTasksRelation>
+
     @Query("SELECT * FROM Sheet ORDER BY id ASC")
     fun getSheets(): Flow<List<SheetEntity>>
 

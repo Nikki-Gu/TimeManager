@@ -72,17 +72,21 @@ class MainActivity : AppCompatActivity() {
         val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
         val sheet = Sheet(
             id = 1,
-            name = "默认清单列表",
-            description =  "默认的第一个清单"
+            name = "默认清单列表测试_byMirack",
+            description = null,
+            sheetClass = "测试类别"
         )
-        sheet.toEntity()?.let { sheetDao.insertSheet(it)}
+        sheet.toEntity()?.let { sheetDao.insertSheet(it) }
         //insert数据
         val task1 = Task(
             name = "向右滑动删除",
             description = null,
             state = TaskState.DOING,
             sheetId = 1,
-            tag = null
+            tag = null,
+            startDate = 123,
+            endDate = 123,
+            rank = "重要紧急"
         )
         task1.toEntity()?.let { taskDao.insertTask(it) }
         val task2 = Task(
@@ -90,7 +94,10 @@ class MainActivity : AppCompatActivity() {
             description = null,
             state = TaskState.DOING,
             sheetId = 1,
-            tag = null
+            tag = null,
+            startDate = 123,
+            endDate = 123,
+            rank = "重要紧急"
         )
         task2.toEntity()?.let { taskDao.insertTask(it) }
         val task3 = Task(
@@ -98,7 +105,10 @@ class MainActivity : AppCompatActivity() {
             description = null,
             state = TaskState.DOING,
             sheetId = 1,
-            tag = null
+            tag = null,
+            startDate = 123,
+            endDate = 123,
+            rank = "重要紧急"
         )
         task3.toEntity()?.let { taskDao.insertTask(it) }
     }
