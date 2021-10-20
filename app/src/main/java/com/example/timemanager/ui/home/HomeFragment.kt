@@ -104,9 +104,11 @@ class HomeFragment : Fragment(){
         }
         tasksAdapter.taskClickListener = object : TasksAdapter.TaskClickListener {
             override fun onTaskClick(taskId: Int, card: MaterialCardView) {
-                val extras = FragmentNavigatorExtras(
-                    card to taskId.toString()
-                )
+                //TODO: 传参数taskId给Fragment
+                findNavController().navigate(R.id.navigation_edit_task)
+//                val extras = FragmentNavigatorExtras(
+//                    card to taskId.toString()
+//                )
 //                val action = NavigationTodoDirections.navToTask(
 //                    taskId = taskId
 //                )

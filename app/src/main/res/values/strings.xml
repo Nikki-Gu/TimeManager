@@ -19,4 +19,5 @@
     <string name="task_description">描述</string>
     <string name="must_be_not_empty">待办名称不能为空</string>
     <string name="add">添加完成</string>
+    <string name="list_edit_item">编辑待办</string>
 </resources>

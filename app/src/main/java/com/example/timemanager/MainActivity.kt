@@ -22,17 +22,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-//    private val homeViewModel = HomeViewModel(
-//            TaskDao_Impl(TimeManagerDatabase_Impl()),
-//            UserPreferencesRepository(this),
-//            SheetRepository(SheetDao_Impl(TimeManagerDatabase_Impl()))
-//        )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        initDatabase()
         initView()
         initNavController()
-        initDatabase()
         setNavViewVisibility()
     }
 
@@ -68,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             .allowMainThreadQueries()
             .build()
 
+        TimeManagerDatabase.getInstance(this).taskDao().deleteAll()
         val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
         val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
         val sheet = Sheet(

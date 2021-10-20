@@ -11,7 +11,7 @@
             tools:layout="@layout/fragment_home" >
 <!--        <action-->
 <!--                android:id="@+id/navToTask"-->
-<!--                app:destination="@id/taskFragment" />-->
+<!--                app:destination="@id/navigation_edit_task" />-->
     </fragment>
 
     <fragment
@@ -34,4 +34,14 @@
             android:name="com.example.timemanager.ui.AddTaskFragment"
             android:label="@string/list_add_item"
             tools:layout="@layout/add_task_fragment" />
+
+    <fragment
+            android:id="@+id/navigation_edit_task"
+            android:name="com.example.timemanager.ui.EditTaskFragment"
+            android:label="@string/list_edit_item"
+            tools:layout="@layout/add_task_fragment">
+<!--        <argument-->
+<!--                android:name="taskId"-->
+<!--                app:argType="integer" />-->
+    </fragment>
 </navigation>
