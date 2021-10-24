@@ -4,7 +4,7 @@
     <item
         android:id="@+id/save_task"
         android:icon="@drawable/ic_check_24dp"
-        android:title="@string/task_name"
+        android:title="@string/list_add_item"
         app:iconTint="?attr/colorPrimary"
         app:showAsAction="always" />
 </menu>
