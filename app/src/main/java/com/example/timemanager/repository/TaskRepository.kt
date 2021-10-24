@@ -5,17 +5,17 @@ import com.example.timemanager.db.model.Task
 import com.example.timemanager.repository.mapper.TaskMapper.toDomain
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 
-class TaskRepository(private val taskDao: TaskDao) {
-
-    fun getTask(id: Int) = taskDao.getTask(id).toDomain()
-
-    suspend fun deleteTask(id: Int) = taskDao.deleteTask(id)
-
-    suspend fun insert(task: Task): Long? = task.toEntity()?.let { taskDao.insertTask(it) }
-
-    suspend fun setTaskDone(id: Int) = taskDao.setTaskDone(id)
-
-    suspend fun setTaskDoing(id: Int) = taskDao.setTaskDoing(id)
-
-    suspend fun updateTask(task: Task) = task.toEntity()?.let { taskDao.updateTask(it) }
-}
+//class TaskRepository(private val taskDao: TaskDao) {
+//
+//    fun getTask(id: Int) = taskDao.getTask(id).toDomain()
+//
+//    suspend fun deleteTask(id: Int) = taskDao.deleteTask(id)
+//
+//    suspend fun insert(task: Task): Long? = task.toEntity()?.let { taskDao.insertTask(it) }
+//
+//    suspend fun setTaskDone(id: Int) = taskDao.setTaskDone(id)
+//
+//    suspend fun setTaskDoing(id: Int) = taskDao.setTaskDoing(id)
+//
+//    suspend fun updateTask(task: Task) = task.toEntity()?.let { taskDao.updateTask(it) }
+//}

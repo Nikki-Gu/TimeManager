@@ -124,7 +124,8 @@ class HomeFragment : Fragment(){
 
     //@ExperimentalCoroutinesApi
     private fun initSheetSelectedObserver() {
-        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheetNotFlow(1).toDomain()
+        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheet(1)
+            .toDomain()
         val list = sheet?.tasks
         if (list?.isEmpty() == true) {
             showEmptyListIllustration()
