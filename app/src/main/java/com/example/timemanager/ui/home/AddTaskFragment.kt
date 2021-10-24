@@ -5,22 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddTaskFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.createTask
+import com.example.timemanager.repository.mapper.TaskMapper.toDomain
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 
 /**
  * A [Fragment] to create task.
  */
-class AddTaskFragment : Fragment(){
+class AddTaskFragment : Fragment() {
     private var _binding: AddTaskFragmentBinding? = null
     private val binding get() = _binding!!
-    private val viewModel = activity?.let { ViewModelProvider(it).get(HomeViewModel::class.java) }
+    private var jumpFrom: Int? = null
+    private var taskId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,8 +30,14 @@ class AddTaskFragment : Fragment(){
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AddTaskFragmentBinding.inflate(inflater, container, false)
-        viewModel?.getTaskId()
-        // binding.taskNameEditText.setText()
+        jumpFrom = arguments?.getInt(Constants.FROM, 1)
+        taskId = arguments?.getInt(Constants.TASK_ID)
+        val task = taskId?.let {
+            TimeManagerDatabase.getInstance(requireContext()).taskDao()
+                .getTask(it).toDomain()
+        }
+        binding.taskNameEditText.setText(task?.name)
+        binding.taskDescriptionEditText.setText(task?.description)
         initToolBar()
         return binding.root
     }
@@ -54,9 +61,10 @@ class AddTaskFragment : Fragment(){
 
     private fun initToolBar() {
         val toolbar = binding.addTaskToolbar
-        when(viewModel?.getIsEdit()) {
-            true -> toolbar.title = "编辑待办"
-            else -> toolbar.title = "添加待办"
+        when (jumpFrom) {
+            Constants.HOME_ADD -> toolbar.title = getString(R.string.list_add_item)
+            Constants.HOME_EDIT -> toolbar.title = getString(R.string.list_edit_item)
+            else -> toolbar.title = getString(R.string.list_add_item)
         }
         toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {

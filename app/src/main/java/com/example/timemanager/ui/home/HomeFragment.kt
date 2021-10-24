@@ -9,26 +9,21 @@ import android.view.animation.AccelerateInterpolator
 import androidx.annotation.IntRange
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentHomeBinding
 import com.example.timemanager.db.TimeManagerDatabase
-import com.example.timemanager.db.TimeManagerDatabase_Impl
-import com.example.timemanager.db.dao.SheetDao_Impl
-import com.example.timemanager.db.dao.TaskDao_Impl
 import com.google.android.material.card.MaterialCardView
 import com.example.timemanager.db.model.Task
 import com.example.timemanager.db.model.TaskState
-import com.example.timemanager.repository.SheetRepository
-import com.example.timemanager.repository.TaskRepository
-import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.ui.SwipeController
 import com.google.android.material.appbar.AppBarLayout
 
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
 
@@ -42,13 +37,7 @@ class HomeFragment : Fragment(){
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = HomeViewModel(
-            UserPreferencesRepository(requireContext()),
-            SheetRepository(SheetDao_Impl(TimeManagerDatabase_Impl())),
-            TaskRepository(TaskDao_Impl(TimeManagerDatabase_Impl()))
-        )
-        //ViewModelProvider(this).get(HomeViewModel::class.java)
-
+        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         initToolBar()
         return binding.root
@@ -166,7 +155,12 @@ class HomeFragment : Fragment(){
     }
 
     private fun setProgressValue(progress: Int) {
-        ObjectAnimator.ofInt(binding.progressBar, "progress", binding.progressBar.progress, progress).apply {
+        ObjectAnimator.ofInt(
+            binding.progressBar,
+            "progress",
+            binding.progressBar.progress,
+            progress
+        ).apply {
             duration = 300.toLong()
             interpolator = AccelerateInterpolator()
         }.start()
@@ -188,7 +182,8 @@ class HomeFragment : Fragment(){
                 SwipeController.SwipeControllerActions {
                 override fun onDelete(position: Int) {
                     tasksAdapter.currentList[position]?.id?.let { taskId ->
-                        TimeManagerDatabase.getInstance(requireContext()).taskDao().deleteTask(taskId)
+                        TimeManagerDatabase.getInstance(requireContext()).taskDao()
+                            .deleteTask(taskId)
                         initSheetSelectedObserver()
                     }
 //                    createMaterialDialog(

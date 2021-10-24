@@ -8,7 +8,7 @@
     <fragment
             android:id="@+id/navigation_todo"
             android:name="com.example.timemanager.ui.home.HomeFragment"
-            tools:layout="@layout/fragment_home" >
+            tools:layout="@layout/fragment_home">
 
     </fragment>
 
@@ -31,10 +31,4 @@
             android:id="@+id/navigation_add_task"
             android:name="com.example.timemanager.ui.home.AddTaskFragment"
             tools:layout="@layout/add_task_fragment" />
-
-    <fragment
-            android:id="@+id/navigation_edit_task"
-            android:name="com.example.timemanager.ui.home.EditTaskFragment"
-            tools:layout="@layout/add_task_fragment">
-    </fragment>
 </navigation>
