@@ -27,10 +27,10 @@ interface TaskDao {
     fun insertTask(task: TaskEntity): Long
 
     @Query("UPDATE task SET state = 'DOING' WHERE id = :id")
-    suspend fun setTaskDoing(id: Int)
+    fun setTaskDoing(id: Int)
 
     @Query("UPDATE task SET state = 'DONE' WHERE id = :id")
-    suspend fun setTaskDone(id: Int)
+    fun setTaskDone(id: Int)
 
     @Update
     suspend fun updateTask(task: TaskEntity)
