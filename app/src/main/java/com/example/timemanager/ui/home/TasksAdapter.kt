@@ -1,4 +1,4 @@
-package com.example.timemanager.ui
+package com.example.timemanager.ui.home
 
 import android.content.Context
 import android.os.Build

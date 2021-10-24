@@ -21,10 +21,17 @@ class HomeViewModel constructor(
     private val taskRepository: TaskRepository
 ) : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private var taskName = MutableLiveData<Int>()
+    // setValue; getValue?
+    fun getTaskId() = taskName.value
+    fun setTaskName(value : Int) {
+        taskName.value = value
     }
-    val text: LiveData<String> = _text
+    private var isEdit = MutableLiveData<Boolean>()
+    fun getIsEdit() = isEdit.value
+    fun setIdEdit() {
+        isEdit.value = true
+    }
 
     //val sheetSelected: LiveData<Sheet?> = MutableLiveData<Sheet?>()
     @ExperimentalCoroutinesApi

@@ -61,8 +61,8 @@ class MainActivity : AppCompatActivity() {
         Room.databaseBuilder(this, TimeManagerDatabase::class.java, "TimeManager")
             .allowMainThreadQueries()
             .build()
-
-        TimeManagerDatabase.getInstance(this).taskDao().deleteAll()
+        // TODO 第一次安装app的时候显示下面的提示待办，之后不显示
+        TimeManagerDatabase.getInstance(this).taskDao().deleteAll() // 需要修改
         val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
         val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
         val sheet = Sheet(

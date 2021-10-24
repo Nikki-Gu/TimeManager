@@ -1,10 +1,11 @@
-package com.example.timemanager.ui
+package com.example.timemanager.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
@@ -20,15 +21,18 @@ import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 class AddTaskFragment : Fragment(){
     private var _binding: AddTaskFragmentBinding? = null
     private val binding get() = _binding!!
-
+    private val viewModel = activity?.let { ViewModelProvider(it).get(HomeViewModel::class.java) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = AddTaskFragmentBinding.inflate(inflater, container, false)
-        initToolBar();
+        viewModel?.getTaskId()
+        // binding.taskNameEditText.setText()
+        initToolBar()
         return binding.root
     }
 
@@ -51,8 +55,10 @@ class AddTaskFragment : Fragment(){
 
     private fun initToolBar() {
         val toolbar = binding.addTaskToolbar
-        // toolbar设置
-        toolbar.title = "新建待办"
+        when(viewModel?.getIsEdit()) {
+            true -> toolbar.title = "编辑待办"
+            else -> toolbar.title = "添加待办"
+        }
         toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
             findNavController().navigate(R.id.navigation_todo)

@@ -9,7 +9,6 @@ import android.view.animation.AccelerateInterpolator
 import androidx.annotation.IntRange
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,7 +26,6 @@ import com.example.timemanager.repository.TaskRepository
 import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.ui.SwipeController
-import com.example.timemanager.ui.TasksAdapter
 import com.google.android.material.appbar.AppBarLayout
 
 class HomeFragment : Fragment(){
@@ -104,15 +102,10 @@ class HomeFragment : Fragment(){
         }
         tasksAdapter.taskClickListener = object : TasksAdapter.TaskClickListener {
             override fun onTaskClick(taskId: Int, card: MaterialCardView) {
-                //TODO: 传参数taskId给Fragment
-                findNavController().navigate(R.id.navigation_edit_task)
-//                val extras = FragmentNavigatorExtras(
-//                    card to taskId.toString()
-//                )
-//                val action = NavigationTodoDirections.navToTask(
-//                    taskId = taskId
-//                )
-//                findNavController().navigate(action, extras)
+                findNavController().navigate(R.id.navigation_add_task, Bundle().apply {
+                    putInt(Constants.FROM, Constants.HOME_EDIT)
+                    putInt(Constants.TASK_ID, taskId)
+                })
             }
 
             override fun onTaskDoneClick(task: Task) {
