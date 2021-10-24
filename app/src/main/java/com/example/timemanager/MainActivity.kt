@@ -71,7 +71,24 @@ class MainActivity : AppCompatActivity() {
             description = null,
             sheetClass = "测试类别"
         )
-        sheet.toEntity()?.let { sheetDao.insertSheet(it) }
+        val sheet2 = Sheet(
+            id = 2,
+            name = "默认清单列表测试_2",
+            description = null,
+            sheetClass = "测试类别2"
+        )
+        println("SHEET INSERT 1")
+        sheet.toEntity()?.let { sheetDao.insertSheet(it) } //insertSheet测试
+        println("SHEET INSERT 2")
+        sheet2.toEntity()?.let { sheetDao.insertSheet(it) } //insertSheet测试
+        println("SHEET GET")
+        println(sheetDao.getSheet(1)) //getSheet测试
+        println("SHEET GETBYNAME")
+        println(sheetDao.getSheetByName("默认清单列表测试_byMirack")) //getSheetByName测试
+        println("SHEET GETALL")
+        println(sheetDao.getSheets()) //getSheets测试
+        /* delete 功能经测试可用，但会违反整个数据库的外键约束，因此此处不作测试 */
+
         //insert数据
         val task1 = Task(
             name = "向右滑动删除",
@@ -106,6 +123,11 @@ class MainActivity : AppCompatActivity() {
             rank = "重要紧急"
         )
         task3.toEntity()?.let { taskDao.insertTask(it) }
+        println("TASK GET")
+        println(taskDao.getTask(1)) //getTask测试
+        println("TASK GETALL")
+        println(taskDao.getTasks()) //getTasks测试
+        /* 其余功能等待后续实现 */
     }
 
     private fun setNavViewVisibility() {
