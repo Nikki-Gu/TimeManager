@@ -1,13 +1,19 @@
 package com.example.timemanager.ui.home
 
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is home Fragment"
+    private var taskId = MutableLiveData<Int>()
+    fun getTaskId() = taskId.value
+    fun setTaskId(value: Int) {
+        taskId.value = value
     }
-    val text: LiveData<String> = _text
+
+    private var isEdit = MutableLiveData<Boolean>(false)
+    fun getIsEdit() = isEdit.value
+    fun setIdEdit() {
+        isEdit.value = true
+    }
 }

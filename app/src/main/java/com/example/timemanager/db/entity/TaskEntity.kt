@@ -26,5 +26,10 @@ data class TaskEntity(
     var description: String?,
     var state: TaskState,
     @ColumnInfo(name = "sheet_id") var sheetId: Int,
+    var startDate: Long?,//时间类型暂时用long存储
+    var endDate: Long?,
+    var rank: Int?,//等级，重要紧急
+    var repeatTimes: Int = 1,//重复次数
+    var frequency: String?,//任务频率
     var tag: Tag?
 )

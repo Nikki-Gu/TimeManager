@@ -1,7 +1,7 @@
 package com.example.timemanager
 
 import android.os.Bundle
-import android.util.Log
+import android.view.View
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -11,14 +11,11 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.room.Room
 import com.example.timemanager.databinding.ActivityMainBinding
 import com.example.timemanager.db.TimeManagerDatabase
-import com.example.timemanager.db.model.Sheet
-import com.example.timemanager.db.model.Task
-import com.example.timemanager.db.model.TaskState
+import com.example.timemanager.db.model.createSheet
+import com.example.timemanager.db.model.createTask
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
-import com.example.timemanager.repository.mapper.TaskMapper
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 import com.google.android.material.navigation.NavigationBarView
-import kotlinx.coroutines.flow.forEach
 
 class MainActivity : AppCompatActivity() {
 
@@ -26,36 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initView()
         initDatabase()
-    }
-
-    private fun initDatabase() {
-        // 创建数据库
-        Room.databaseBuilder(this, TimeManagerDatabase::class.java, "TimeManager")
-            .allowMainThreadQueries()
-            .build()
-
-        val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
-        val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
-        val sheet = Sheet(
-            id = 1,
-            name = "默认清单列表",
-            description =  "默认的第一个清单"
-        )
-        sheet.toEntity()?.let { sheetDao.insertSheet(it)}
-        //insert数据
-        for (i in (0 until 10)) {
-            val task = Task(
-                id = i,
-                name = "学习$i",
-                description = null,
-                state = TaskState.DOING,
-                sheetId = 1,
-                tag = null
-            )
-            task.toEntity()?.let { taskDao.insertTask(it) }
-        }
+        initView()
+        initNavController()
+        setNavViewVisibility()
     }
 
     private fun initView() {
@@ -63,15 +34,15 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         // 隐藏系统自带的标题栏
         supportActionBar?.hide()
-
         val navView: BottomNavigationView = binding.navView
         // 底部显示style设置
         navView.labelVisibilityMode = NavigationBarView.LABEL_VISIBILITY_LABELED
+    }
 
-        // 底层跳转逻辑
+    // 底层跳转逻辑
+    private fun initNavController() {
+        val navView: BottomNavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         val appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.navigation_todo,
@@ -82,5 +53,44 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    private fun initDatabase() {
+        Room.databaseBuilder(this, TimeManagerDatabase::class.java, "TimeManager")
+            .allowMainThreadQueries()
+            .build()
+
+        // 判断是否第一次使用该app
+        val sharedPreferences = this.getSharedPreferences("preferences", MODE_PRIVATE)
+        val editor = sharedPreferences.edit()
+        val isFirstIn = sharedPreferences.getBoolean("isFirstRun", true)
+        if (isFirstIn) {
+            editor.putBoolean("isFirstRun", false)
+            editor.apply()
+            // 第一次使用app时显示使用指南
+            val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
+            val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
+            createSheet("默认清单列表").toEntity()?.let { sheetDao.insertSheet(it)}
+            createTask("向右滑动删除", 1).toEntity()?.let { taskDao.insertTask(it) }
+            createTask("点击右边图标编辑待办", 1).toEntity()?.let { taskDao.insertTask(it) }
+            createTask("点击左边图标标记待办为已完成", 1).toEntity()?.let { taskDao.insertTask(it) }
+        }
+    }
+
+    private fun setNavViewVisibility() {
+        val navController = findNavController(R.id.nav_host_fragment_activity_main)
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.navigation_todo,
+                R.id.navigation_analysis,
+                R.id.navigation_pet,
+                R.id.navigation_setting -> {
+                    binding.navView.visibility = View.VISIBLE
+                }
+                else -> {
+                    binding.navView.visibility = View.GONE
+                }
+            }
+        }
     }
 }

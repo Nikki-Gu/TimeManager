@@ -8,4 +8,13 @@
     <string name="list_delete">删除清单</string>
     <string name="list_name">清单列表</string>
     <string name="list_add_item">添加待办</string>
+    <string name="list_edit_item">编辑待办</string>
+    <string name="no_tasks">清单空空如也，点击加号添加待办</string>
+    <string name="task_enter_name">标题</string>
+    <string name="task_tag">属性</string>
+    <string name="task_description">描述</string>
+    <string name="must_be_not_empty">待办名称不能为空</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="delete_task_button">delete_task_button</string>
 </resources>
