@@ -17,7 +17,10 @@
         <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?actionBarSize">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:titleTextColor="@color/dim_grey"
+                app:popupTheme="@style/ToolbarPopupTheme">
         </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
