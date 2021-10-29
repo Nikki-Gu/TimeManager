@@ -21,6 +21,8 @@ import com.example.timemanager.db.model.Task
 import com.example.timemanager.db.model.TaskState
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.ui.SwipeController
+import com.example.timemanager.ui.home.adapter.TasksAdapter
+import com.example.timemanager.ui.home.utils.Constants
 import com.google.android.material.appbar.AppBarLayout
 
 class HomeFragment : Fragment() {
