@@ -24,7 +24,7 @@ interface SheetDao {
     fun getSheetByName(name: String): SheetTasksRelation
 
     @Query("SELECT * FROM Sheet ORDER BY id ASC")
-    fun getSheets(): List<SheetTasksRelation>
+    fun getSheets(): List<SheetEntity>
 
     @Query("DELETE FROM Sheet WHERE id = :id")
     fun deleteSheet(id: Int): Int

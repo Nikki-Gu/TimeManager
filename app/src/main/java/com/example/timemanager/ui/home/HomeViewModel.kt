@@ -5,6 +5,18 @@ import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
 
+    companion object {
+        const val DEFAULT_SELECTED_SHEET_ID = 1
+    }
+
+    val projectSelectedId: MutableLiveData<Int> = MutableLiveData(DEFAULT_SELECTED_SHEET_ID)
+    fun getProjectSelectedId() : Int {
+        return projectSelectedId.value ?: DEFAULT_SELECTED_SHEET_ID
+    }
+    fun setProjectSelectedId(id: Int) {
+        projectSelectedId.value = id
+    }
+
     private var taskId = MutableLiveData<Int>()
     fun getTaskId() = taskId.value
     fun setTaskId(value: Int) {

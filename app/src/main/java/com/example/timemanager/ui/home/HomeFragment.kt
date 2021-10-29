@@ -58,6 +58,11 @@ class HomeFragment : Fragment() {
                     findNavController().navigate(R.id.navigation_add_task)
                     true
                 }
+                R.id.menu_sheet -> {
+                    // 点击右上角+号
+                    findNavController().navigate(R.id.navigation_menu_sheet)
+                    true
+                }
                 R.id.list_setting -> {
                     // 点击右上角菜单中的属性设置，跳转到清单编辑页面
                     // Navigate to item settings view
@@ -94,7 +99,7 @@ class HomeFragment : Fragment() {
         tasksAdapter.taskClickListener = object : TasksAdapter.TaskClickListener {
             override fun onTaskClick(taskId: Int, card: MaterialCardView) {
                 findNavController().navigate(R.id.navigation_add_task, Bundle().apply {
-                    putInt(Constants.FROM, Constants.HOME_EDIT)
+                    putInt(Constants.FROM, Constants.EDIT)
                     putInt(Constants.TASK_ID, taskId)
                 })
             }
@@ -115,7 +120,8 @@ class HomeFragment : Fragment() {
 
     //@ExperimentalCoroutinesApi
     private fun initSheetSelectedObserver() {
-        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheet(1)
+        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao()
+            .getSheet(homeViewModel.getProjectSelectedId() ?: 1)
             .toDomain()
         val list = sheet?.tasks
         if (list?.isEmpty() == true) {

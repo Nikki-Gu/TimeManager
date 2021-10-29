@@ -34,4 +34,5 @@
     <color name="gray">#8A8A8A</color>
 
     <color name="colorError">#b61827</color>
+    <color name="colorPrimaryAlpha">#4D4285F4</color>
 </resources>

@@ -31,4 +31,14 @@
             android:id="@+id/navigation_add_task"
             android:name="com.example.timemanager.ui.home.AddTaskFragment"
             tools:layout="@layout/add_task_fragment" />
+
+    <fragment
+            android:id="@+id/navigation_menu_sheet"
+            android:name="com.example.timemanager.ui.home.MenuSheetFragment"
+            tools:layout="@layout/menu_sheet_fragment" />
+
+    <fragment
+            android:id="@+id/navigation_add_sheet"
+            android:name="com.example.timemanager.ui.home.AddSheetFragment"
+            tools:layout="@layout/add_sheet_fragment" />
 </navigation>

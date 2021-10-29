@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+                name="sheet"
+                type="com.example.timemanager.db.model.Sheet" />
+    </data>
+
+    <FrameLayout
+            android:id="@+id/sheet_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:background="@drawable/selectable_item_background"
+            android:backgroundTint="@color/colorPrimaryAlpha"
+            android:foreground="?attr/selectableItemBackground">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_margin="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/sheet_name_text_view"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:padding="16dp"
+                    android:textAppearance="?attr/textAppearanceBody2"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/edit_sheet_button"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    android:textColor="@color/selectable_item_text"
+                    android:text="@{sheet.name}"
+                    tools:text="清单1"
+                    android:layout_marginStart="8dp" />
+
+            <ImageButton
+                    android:id="@+id/edit_sheet_button"
+                    android:layout_width="@dimen/image_button_large_size"
+                    android:layout_height="@dimen/image_button_large_size"
+                    android:layout_marginEnd="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/edit_sheet_button"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:tint="?attr/colorSecondary" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </FrameLayout>
+</layout>
+

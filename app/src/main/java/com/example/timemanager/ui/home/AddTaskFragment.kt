@@ -63,8 +63,8 @@ class AddTaskFragment : Fragment() {
     private fun initToolBar() {
         val toolbar = binding.addTaskToolbar
         when (jumpFrom) {
-            Constants.HOME_ADD -> toolbar.title = getString(R.string.list_add_item)
-            Constants.HOME_EDIT -> toolbar.title = getString(R.string.list_edit_item)
+            Constants.ADD -> toolbar.title = getString(R.string.list_add_item)
+            Constants.EDIT -> toolbar.title = getString(R.string.list_edit_item)
             else -> toolbar.title = getString(R.string.list_add_item)
         }
         toolbar.setNavigationIcon(R.drawable.ic_back)
