@@ -16,13 +16,16 @@ import com.example.timemanager.db.model.Sheet
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.ui.home.adapter.SheetsAdapter
 import com.example.timemanager.ui.home.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MenuSheetFragment : Fragment() {
     private var _binding: MenuSheetFragmentBinding? = null
     private val binding get() = _binding!!
 
     // TODO
     private val homeViewModel by viewModels<HomeViewModel>()
+    private var sheetId: Int = Constants.DEFAULT_SHEET_ID
 
     private val sheetsAdapter = SheetsAdapter()
 
@@ -32,6 +35,8 @@ class MenuSheetFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = MenuSheetFragmentBinding.inflate(inflater, container, false)
+        sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
+        sheetsAdapter.sheetSelected = sheetId
         return binding.root
     }
 
@@ -60,26 +65,21 @@ class MenuSheetFragment : Fragment() {
 
         sheetsAdapter.sheetClickListener = object : SheetsAdapter.SheetClickListener {
             override fun onSheetClick(sheet: Sheet) {
-                homeViewModel?.setProjectSelectedId(sheet.id)
+                // homeViewModel?.setProjectSelectedId(sheet.id)
+                sheetsAdapter.sheetSelected = sheet.id
+                sheetsAdapter.notifyDataSetChanged()
+                findNavController().navigate(R.id.navigation_todo, Bundle().apply {
+                    putInt(Constants.SHEET_ID, sheet.id)
+                })
             }
 
             override fun onEditSheetClick(sheet: Sheet) {
                 findNavController().navigate(R.id.navigation_add_sheet, Bundle().apply {
                     putInt(Constants.FROM, Constants.EDIT)
+                    putInt(Constants.SHEET_ID, sheet.id)
                 })
             }
         }
-
-        homeViewModel?.projectSelectedId?.observe(
-            viewLifecycleOwner,
-            {
-                sheetsAdapter.apply {
-                    sheetSelected = it
-                    notifyDataSetChanged() // 不一定使用上了，recycleview里面不知道有没有设置观察者模式
-                }
-
-            }
-        )
     }
 
     private fun initToolBar() {

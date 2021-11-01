@@ -9,6 +9,7 @@ import android.view.animation.AccelerateInterpolator
 import androidx.annotation.IntRange
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -24,23 +25,26 @@ import com.example.timemanager.ui.SwipeController
 import com.example.timemanager.ui.home.adapter.TasksAdapter
 import com.example.timemanager.ui.home.utils.Constants
 import com.google.android.material.appbar.AppBarLayout
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private lateinit var homeViewModel: HomeViewModel
+    private val homeViewModel by viewModels<HomeViewModel>()
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private val tasksAdapter = TasksAdapter()
+    private var sheetId: Int = Constants.DEFAULT_SHEET_ID
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        homeViewModel = ViewModelProvider(requireActivity()).get(HomeViewModel::class.java)
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
         initToolBar()
         return binding.root
     }
@@ -59,8 +63,10 @@ class HomeFragment : Fragment() {
                     true
                 }
                 R.id.menu_sheet -> {
-                    // 点击右上角+号
-                    findNavController().navigate(R.id.navigation_menu_sheet)
+                    // 点击右上角 三
+                    findNavController().navigate(R.id.action_navigation_todo_to_navigation_menu_sheet, Bundle().apply {
+                        putInt(Constants.SHEET_ID, sheetId)
+                    })
                     true
                 }
                 R.id.list_setting -> {
@@ -121,7 +127,7 @@ class HomeFragment : Fragment() {
     //@ExperimentalCoroutinesApi
     private fun initSheetSelectedObserver() {
         val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao()
-            .getSheet(homeViewModel.getProjectSelectedId() ?: 1)
+            .getSheet(sheetId)
             .toDomain()
         val list = sheet?.tasks
         if (list?.isEmpty() == true) {

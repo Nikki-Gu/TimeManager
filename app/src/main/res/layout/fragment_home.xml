@@ -91,11 +91,11 @@
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
         <ImageView
                 android:layout_width="240dp"
-                android:layout_height="240dp"
+                android:layout_height="36dp"
                 android:layout_gravity="center"
                 android:src="@drawable/project_completed" />
 

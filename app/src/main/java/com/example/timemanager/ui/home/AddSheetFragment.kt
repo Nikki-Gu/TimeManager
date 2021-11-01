@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
@@ -15,20 +15,21 @@ import com.example.timemanager.db.model.createSheet
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.ui.home.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
 
 /**
  * a [Fragment] to add Sheet
  */
+@AndroidEntryPoint
 class AddSheetFragment : Fragment() {
     private var _binding: AddSheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    // TODO: homeViewModel为空
-    private val homeViewModel =
-        activity?.let { ViewModelProvider(it).get(HomeViewModel::class.java) }
+    // TODO: homeViewModel不是同一个
+    private val homeViewModel by viewModels<HomeViewModel>()
 
     private var jumpFrom: Int? = null
-    private var sheetId = homeViewModel?.getProjectSelectedId() ?: 1
+    private var sheetId: Int = Constants.DEFAULT_SHEET_ID
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +38,8 @@ class AddSheetFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AddSheetFragmentBinding.inflate(inflater, container, false)
-        jumpFrom = arguments?.getInt(Constants.FROM, 1)
+        jumpFrom = arguments?.getInt(Constants.FROM, Constants.ADD)
+        sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
         initToolBar()
         return binding.root
     }

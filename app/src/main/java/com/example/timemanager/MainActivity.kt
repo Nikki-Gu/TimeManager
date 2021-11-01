@@ -2,6 +2,7 @@ package com.example.timemanager
 
 import android.os.Bundle
 import android.view.View
+import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -15,11 +16,16 @@ import com.example.timemanager.db.model.createSheet
 import com.example.timemanager.db.model.createTask
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
+import com.example.timemanager.ui.home.HomeViewModel
 import com.google.android.material.navigation.NavigationBarView
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private val homeViewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
