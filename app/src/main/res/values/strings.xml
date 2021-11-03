@@ -17,6 +17,11 @@
     <string name="task_description">描述</string>
     <string name="must_be_not_empty">待办名称不能为空</string>
     <string name="sheet_enter_name">清单名称</string>
+    <string name="count_up">正计时</string>
+    <string name="count_down">倒计时</string>
+    <string name="initial_time">00:00:00</string>
+    <string name="colon">:</string>
+    <string name="zero">00</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="delete_task_button">delete_task_button</string>

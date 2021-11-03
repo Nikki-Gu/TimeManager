@@ -103,7 +103,7 @@ class HomeFragment : Fragment() {
             startPostponedEnterTransition()
         }
         tasksAdapter.taskClickListener = object : TasksAdapter.TaskClickListener {
-            override fun onTaskClick(taskId: Int, card: MaterialCardView) {
+            override fun onTaskEditClick(taskId: Int, card: MaterialCardView) {
                 findNavController().navigate(R.id.navigation_add_task, Bundle().apply {
                     putInt(Constants.FROM, Constants.EDIT)
                     putInt(Constants.TASK_ID, taskId)
@@ -120,6 +120,12 @@ class HomeFragment : Fragment() {
                 //homeViewModel.setTaskDoing(task.id)
                 TimeManagerDatabase.getInstance(requireContext()).taskDao().setTaskDoing(task.id)
                 initSheetSelectedObserver()
+            }
+
+            override fun onTaskTimingClick(task: Task) {
+                findNavController().navigate(R.id.navigation_timing, Bundle().apply {
+                    putString(Constants.TASK_NAME, task.name)
+                })
             }
         }
     }

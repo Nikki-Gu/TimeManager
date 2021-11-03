@@ -64,7 +64,10 @@ class TasksAdapter : ListAdapter<Task, TasksAdapter.ViewHolder>(DIFF_CALLBACK) {
                 binding.checkBox.isChecked = true
             }
             binding.editTaskButton.setOnClickListener {
-                taskClickListener.onTaskClick(task.id, binding.taskCard)
+                taskClickListener.onTaskEditClick(task.id, binding.taskCard)
+            }
+            binding.taskCard.setOnClickListener {
+                taskClickListener.onTaskTimingClick(task)
             }
         }
     }
@@ -82,8 +85,9 @@ class TasksAdapter : ListAdapter<Task, TasksAdapter.ViewHolder>(DIFF_CALLBACK) {
     }
 
     interface TaskClickListener {
-        fun onTaskClick(taskId: Int, card: MaterialCardView)
+        fun onTaskEditClick(taskId: Int, card: MaterialCardView)
         fun onTaskDoneClick(task: Task)
         fun onTaskDoingClick(task: Task)
+        fun onTaskTimingClick(task: Task)
     }
 }
