@@ -11,6 +11,7 @@ import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
 import androidx.core.view.isVisible
+import com.example.timemanager.ui.home.utils.Constants
 
 /**
  * A [Fragment] to timing.
@@ -19,10 +20,10 @@ class TimingFragment : Fragment(){
     private var _binding: FragmentTimingBinding? = null
     private val binding get() = _binding!!
 
-    private var running = false //计时状态
-
     private val handler = Handler()
     private var mCountNum = 0
+    private var running = false //计时状态
+    private var taskName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +31,7 @@ class TimingFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTimingBinding.inflate(inflater, container, false)
+        taskName = arguments?.getString(Constants.TASK_NAME)
         initTimer()
         return binding.root
     }
@@ -46,7 +48,9 @@ class TimingFragment : Fragment(){
                         true
                     }
                     R.id.count_down -> {
-                        findNavController().navigate(R.id.navigation_count_down)
+                        findNavController().navigate(R.id.navigation_count_down, Bundle().apply {
+                            putString(Constants.TASK_NAME, taskName)
+                        })
                         true
                     }
                     else -> false
@@ -60,8 +64,7 @@ class TimingFragment : Fragment(){
     }
 
     private fun initTimer() {
-        //TODO: 显示任务名称
-
+        binding.taskName.text = taskName
         binding.timingButton.text = "开始专注"
         binding.finishButton.text = "完成专注"
         binding.finishButton.isVisible = false

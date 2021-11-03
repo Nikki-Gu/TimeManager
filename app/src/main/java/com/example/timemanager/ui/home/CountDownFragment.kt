@@ -12,6 +12,7 @@ import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
 import androidx.core.view.isVisible
 import com.example.timemanager.databinding.FragmentCountDownBinding
+import com.example.timemanager.ui.home.utils.Constants
 
 /**
  * A [Fragment] to count down.
@@ -23,6 +24,7 @@ class CountDownFragment : Fragment(){
     private val handler = Handler()
     private var mCountNum = 0
     private var running = false //计时状态
+    private var taskName: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,6 +32,7 @@ class CountDownFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCountDownBinding.inflate(inflater, container, false)
+        taskName = arguments?.getString(Constants.TASK_NAME)
         initTimer()
         return binding.root
     }
@@ -43,7 +46,9 @@ class CountDownFragment : Fragment(){
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
-                        findNavController().navigate(R.id.navigation_timing)
+                        findNavController().navigate(R.id.navigation_timing, Bundle().apply {
+                            putString(Constants.TASK_NAME, taskName)
+                        })
                         true
                     }
                     R.id.count_down -> {
@@ -60,8 +65,7 @@ class CountDownFragment : Fragment(){
     }
 
     private fun initTimer() {
-        //TODO: 显示任务名称
-
+        binding.taskName.text = taskName
         binding.timingButton.text = "开始专注"
         binding.finishButton.text = "完成专注"
         binding.finishButton.isVisible = false

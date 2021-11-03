@@ -123,8 +123,9 @@ class HomeFragment : Fragment() {
             }
 
             override fun onTaskTimingClick(task: Task) {
-                //TODO: 传task name给Fragment
-                findNavController().navigate(R.id.navigation_timing)
+                findNavController().navigate(R.id.navigation_timing, Bundle().apply {
+                    putString(Constants.TASK_NAME, task.name)
+                })
             }
         }
     }
