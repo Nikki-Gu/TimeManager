@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.CountDownFragment">
+
+    <com.google.android.material.appbar.AppBarLayout
+            style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp">
+
+        <androidx.appcompat.widget.Toolbar
+                android:id="@+id/count_down_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/white"
+                app:titleTextColor="@color/dim_grey"
+                app:popupTheme="@style/ToolbarPopupTheme"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="0dp">
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:layout_editor_absoluteX="0dp"
+                    tools:layout_editor_absoluteY="0dp"
+                    android:gravity="center">
+
+                <EditText
+                        android:id="@+id/ed_hour"
+                        android:text="@string/zero"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="2" />
+
+                <TextView
+                        android:text="@string/colon"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                <EditText
+                        android:id="@+id/ed_min"
+                        android:text="@string/zero"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="2" />
+
+                <TextView
+                        android:text="@string/colon"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                <EditText
+                        android:id="@+id/ed_second"
+                        android:text="@string/zero"
+                        android:textSize="60sp"
+                        android:gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="2" />
+
+            </LinearLayout>
+
+            <Button
+                    android:id="@+id/timing_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            <Button
+                    android:id="@+id/finish_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+        </LinearLayout>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

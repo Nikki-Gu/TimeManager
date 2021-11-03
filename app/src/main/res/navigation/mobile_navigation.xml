@@ -45,4 +45,15 @@
             android:id="@+id/navigation_add_sheet"
             android:name="com.example.timemanager.ui.home.AddSheetFragment"
             tools:layout="@layout/add_sheet_fragment" />
+
+    <fragment
+            android:id="@+id/navigation_timing"
+            android:name="com.example.timemanager.ui.TimingFragment"
+            tools:layout="@layout/fragment_timing" />
+
+    <fragment
+            android:id="@+id/navigation_count_down"
+            android:name="com.example.timemanager.ui.CountDownFragment"
+            tools:layout="@layout/fragment_count_down" />
+
 </navigation>
