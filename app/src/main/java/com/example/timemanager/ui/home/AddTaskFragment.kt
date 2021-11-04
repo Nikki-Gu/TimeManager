@@ -11,6 +11,7 @@ import com.example.timemanager.R
 import com.example.timemanager.databinding.AddTaskFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.createTask
+import com.example.timemanager.db.model.createUpdateTask
 import com.example.timemanager.repository.mapper.TaskMapper.toDomain
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 import com.example.timemanager.ui.home.utils.Constants
@@ -51,7 +52,11 @@ class AddTaskFragment : Fragment() {
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.save_task -> {
-                        insertTask()
+                        when (jumpFrom) {
+                            Constants.ADD -> insertTask()
+                            Constants.EDIT -> updateTask()
+                            else -> insertTask()
+                        }
                         true
                     }
                     else -> false
@@ -84,6 +89,24 @@ class AddTaskFragment : Fragment() {
                 TimeManagerDatabase.getInstance(it)
                     .taskDao()
                     .insertTask(taskEntity)
+            }
+        }
+        findNavController().navigateUp()
+    }
+
+    private fun updateTask() {
+        if (!validateTaskName()) {
+            return
+        }
+        val name = binding.taskNameEditText.text.toString()
+        val description = binding.taskDescriptionEditText.text.toString()
+        activity?.let {
+            taskId?.let { it1 ->
+                createUpdateTask(it1, name, 1, description).toEntity()?.let { taskEntity ->
+                    TimeManagerDatabase.getInstance(it)
+                        .taskDao()
+                        .updateTask(taskEntity)
+                }
             }
         }
         findNavController().navigateUp()

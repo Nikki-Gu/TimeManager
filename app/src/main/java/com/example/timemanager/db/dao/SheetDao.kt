@@ -30,5 +30,5 @@ interface SheetDao {
     fun deleteSheet(id: Int): Int
 
     @Update
-    suspend fun updateSheet(sheet: SheetEntity)
+    fun updateSheet(sheet: SheetEntity)
 }

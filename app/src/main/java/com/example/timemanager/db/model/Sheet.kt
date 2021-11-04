@@ -9,13 +9,15 @@ data class Sheet(
     val tasks: List<Task?> = emptyList()
 )
 
-fun createSheet(name: String) =
+fun createSheet(name: String, description: String? = null) =
     Sheet(
-        name = name
+        name = name,
+        description  = description
     )
 
-fun createSheet(name: String, description: String?) =
+fun createUpdateSheet(id : Int, name: String, description: String? = null) =
     Sheet(
+        id = id,
         name = name,
         description  = description
     )

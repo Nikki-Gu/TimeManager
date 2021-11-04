@@ -33,5 +33,5 @@ interface TaskDao {
     fun setTaskDone(id: Int)
 
     @Update
-    suspend fun updateTask(task: TaskEntity)
+    fun updateTask(task: TaskEntity)
 }

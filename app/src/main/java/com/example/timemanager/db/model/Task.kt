@@ -14,23 +14,20 @@ data class Task(
     val tag: Tag? = null
 )
 
-fun createTask(name : String, sheetId: Int) =
-    Task(
-        name = name,
-        state = TaskState.DOING,
-        sheetId = sheetId
-    )
 
-fun createTask(name : String, sheetId : Int, description: String?) =
+
+fun createTask(name : String, sheetId : Int, description: String? = null, rank: Int? = null) =
     Task(
         name = name,
         state = TaskState.DOING,
         sheetId = sheetId,
-        description = description
+        description = description,
+        rank = rank
     )
 
-fun createTask(name : String, sheetId : Int, description: String?, rank: Int?) =
+fun createUpdateTask(id : Int, name : String, sheetId : Int, description: String? = null, rank: Int? = null) =
     Task(
+        id = id,
         name = name,
         state = TaskState.DOING,
         sheetId = sheetId,

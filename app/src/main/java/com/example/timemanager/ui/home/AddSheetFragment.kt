@@ -12,6 +12,7 @@ import com.example.timemanager.R
 import com.example.timemanager.databinding.AddSheetFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.createSheet
+import com.example.timemanager.db.model.createUpdateSheet
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.ui.home.utils.Constants
@@ -79,7 +80,11 @@ class AddSheetFragment : Fragment() {
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.save_sheet -> {
-                        insertSheet()
+                        when (jumpFrom) {
+                            Constants.ADD -> insertSheet()
+                            Constants.EDIT -> updateSheet()
+                            else -> insertSheet()
+                        }
                         true
                     }
                     else -> false
@@ -99,6 +104,21 @@ class AddSheetFragment : Fragment() {
                 TimeManagerDatabase.getInstance(it)
                     .sheetDao()
                     .insertSheet(sheetEntity)
+            }
+        }
+        findNavController().navigateUp()
+    }
+
+    private fun updateSheet() {
+        if (!validateTaskName()) {
+            return
+        }
+        val name = binding.sheetNameEditText.text.toString()
+        activity?.let {
+            createUpdateSheet(sheetId, name).toEntity()?.let { sheetEntity ->
+                TimeManagerDatabase.getInstance(it)
+                    .sheetDao()
+                    .updateSheet(sheetEntity)
             }
         }
         findNavController().navigateUp()
