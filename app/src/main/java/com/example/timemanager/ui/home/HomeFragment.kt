@@ -10,7 +10,6 @@ import androidx.annotation.IntRange
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -51,8 +50,11 @@ class HomeFragment : Fragment() {
 
     private fun initToolBar() {
         val toolbar = binding.toolbar
+        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao()
+            .getSheet(sheetId)
+            .toDomain()
         // toolbar设置
-        toolbar.title = "默认清单列表"
+        toolbar.title = sheet?.name
         toolbar.overflowIcon = resources.getDrawable(R.drawable.ic_list_setting)
         toolbar.inflateMenu(R.menu.top_home_menu)
         toolbar.setOnMenuItemClickListener {
