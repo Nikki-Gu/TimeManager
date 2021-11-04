@@ -4,19 +4,23 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.MenuSheetFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.Sheet
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
+import com.example.timemanager.ui.SwipeController
 import com.example.timemanager.ui.home.adapter.SheetsAdapter
 import com.example.timemanager.ui.home.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
+import org.w3c.dom.Text
 
 @AndroidEntryPoint
 class MenuSheetFragment : Fragment() {
@@ -26,6 +30,7 @@ class MenuSheetFragment : Fragment() {
     // TODO
     private val homeViewModel by viewModels<HomeViewModel>()
     private var sheetId: Int = Constants.DEFAULT_SHEET_ID
+    private var sheetsAmount: Int = Constants.DEFAULT_SHEET_AMOUNT
 
     private val sheetsAdapter = SheetsAdapter()
 
@@ -37,6 +42,7 @@ class MenuSheetFragment : Fragment() {
         _binding = MenuSheetFragmentBinding.inflate(inflater, container, false)
         sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
         sheetsAdapter.sheetSelected = sheetId
+        sheetsAmount = getSheetAmount()
         return binding.root
     }
 
@@ -44,6 +50,7 @@ class MenuSheetFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initToolBar()
         initSheetRecycleView()
+        setSwipeActions()
     }
 
     override fun onDestroyView() {
@@ -96,6 +103,7 @@ class MenuSheetFragment : Fragment() {
                     R.id.add_sheet -> {
                         // 点击右上角+号
                         findNavController().navigate(R.id.navigation_add_sheet)
+                        sheetsAmount = getSheetAmount()
                         true
                     }
                     else -> false
@@ -103,4 +111,36 @@ class MenuSheetFragment : Fragment() {
             }
         }
     }
+
+    private fun setSwipeActions() {
+        val swipeControllerActions =
+            if (sheetsAmount > 1) {
+                object :
+                    SwipeController.SwipeControllerActions {
+
+                    override fun onDelete(position: Int) {
+                        sheetsAdapter.currentList[position]?.id?.let { sheetId ->
+                            TimeManagerDatabase.getInstance(requireContext())
+                                .sheetDao()
+                                .deleteSheet(sheetId)
+                            initSheetRecycleView()
+                            sheetsAmount = getSheetAmount()
+                        }
+                    }
+                }
+            } else {
+                object :
+                    SwipeController.SwipeControllerActions {
+                    override fun onDelete(position: Int) {
+                        Toast.makeText(requireContext(), "这是最后一个清单了，不能删除哦！", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        val swipeController = SwipeController(requireContext(), swipeControllerActions)
+        val itemTouchHelper = ItemTouchHelper(swipeController)
+        itemTouchHelper.attachToRecyclerView(binding.sheetsRecyclerView)
+    }
+
+    private fun getSheetAmount() =
+        TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheets().size
 }

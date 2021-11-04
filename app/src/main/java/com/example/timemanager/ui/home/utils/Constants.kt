@@ -9,5 +9,6 @@ class Constants {
         const val TASK_NAME = "task_name"
         const val SHEET_ID = "sheet_id"
         const val DEFAULT_SHEET_ID = 1
+        const val DEFAULT_SHEET_AMOUNT = 1
     }
 }
