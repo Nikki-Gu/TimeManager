@@ -48,12 +48,12 @@
 
     <fragment
             android:id="@+id/navigation_timing"
-            android:name="com.example.timemanager.ui.TimingFragment"
+            android:name="com.example.timemanager.ui.home.TimingFragment"
             tools:layout="@layout/fragment_timing" />
 
     <fragment
             android:id="@+id/navigation_count_down"
-            android:name="com.example.timemanager.ui.CountDownFragment"
+            android:name="com.example.timemanager.ui.home.CountDownFragment"
             tools:layout="@layout/fragment_count_down" />
 
 </navigation>
