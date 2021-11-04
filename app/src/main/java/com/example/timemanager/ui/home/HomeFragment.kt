@@ -76,12 +76,6 @@ class HomeFragment : Fragment() {
                     // Navigate to item settings view
                     true
                 }
-                R.id.list_delete -> {
-                    // 点击右上角菜单中的删除
-                    // delete list
-                    // 默认清单列表不可删除
-                    true
-                }
                 else -> false
             }
         }
@@ -230,6 +224,9 @@ class HomeFragment : Fragment() {
         val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(binding.tasksRecyclerView)
     }
+
+    private fun getSheetAmount() =
+        TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheets().size
 
     override fun onDestroyView() {
         super.onDestroyView()

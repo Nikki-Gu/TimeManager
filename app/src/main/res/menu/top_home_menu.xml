@@ -7,9 +7,6 @@
             android:title="@string/list_setting" />
 
     <item
-            android:id="@+id/list_delete"
-            android:title="@string/list_delete" />
-    <item
             android:id="@+id/list_add"
             android:title="@string/list_add_item"
             android:icon="@drawable/ic_tianjia"
