@@ -92,7 +92,7 @@ class MenuSheetFragment : Fragment() {
     private fun initToolBar() {
         val toolbar = binding.menuSheetToolbar
         toolbar.apply {
-            title = "清单列表"
+            title = getString(R.string.menu_sheet)
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
                 findNavController().navigate(R.id.action_navigation_menu_sheet_to_navigation_todo)

@@ -12,6 +12,7 @@ import com.example.timemanager.databinding.AddTaskFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.createTask
 import com.example.timemanager.db.model.createUpdateTask
+import com.example.timemanager.extensions.hideSoftKeyboard
 import com.example.timemanager.repository.mapper.TaskMapper.toDomain
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 import com.example.timemanager.ui.home.utils.Constants
@@ -74,7 +75,7 @@ class AddTaskFragment : Fragment() {
         }
         toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.navigation_todo)
+            findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
         }
     }
 
@@ -85,13 +86,14 @@ class AddTaskFragment : Fragment() {
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
+            it.hideSoftKeyboard()
             createTask(name, 1, description).toEntity()?.let { taskEntity ->
                 TimeManagerDatabase.getInstance(it)
                     .taskDao()
                     .insertTask(taskEntity)
             }
         }
-        findNavController().navigateUp()
+        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
     }
 
     private fun updateTask() {
@@ -101,6 +103,7 @@ class AddTaskFragment : Fragment() {
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
+            it.hideSoftKeyboard()
             taskId?.let { it1 ->
                 createUpdateTask(it1, name, 1, description).toEntity()?.let { taskEntity ->
                     TimeManagerDatabase.getInstance(it)
@@ -109,7 +112,7 @@ class AddTaskFragment : Fragment() {
                 }
             }
         }
-        findNavController().navigateUp()
+        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
     }
 
     private fun validateTaskName(): Boolean {

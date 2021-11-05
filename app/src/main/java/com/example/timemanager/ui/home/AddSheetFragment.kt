@@ -13,6 +13,7 @@ import com.example.timemanager.databinding.AddSheetFragmentBinding
 import com.example.timemanager.db.TimeManagerDatabase
 import com.example.timemanager.db.model.createSheet
 import com.example.timemanager.db.model.createUpdateSheet
+import com.example.timemanager.extensions.hideSoftKeyboard
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.ui.home.utils.Constants
@@ -100,6 +101,7 @@ class AddSheetFragment : Fragment() {
         }
         val name = binding.sheetNameEditText.text.toString()
         activity?.let {
+            it.hideSoftKeyboard()
             createSheet(name).toEntity()?.let { sheetEntity ->
                 TimeManagerDatabase.getInstance(it)
                     .sheetDao()
@@ -115,6 +117,7 @@ class AddSheetFragment : Fragment() {
         }
         val name = binding.sheetNameEditText.text.toString()
         activity?.let {
+            it.hideSoftKeyboard()
             createUpdateSheet(sheetId, name).toEntity()?.let { sheetEntity ->
                 TimeManagerDatabase.getInstance(it)
                     .sheetDao()
