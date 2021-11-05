@@ -43,14 +43,22 @@ class AddTaskFragment : Fragment() {
         }
         binding.taskNameEditText.setText(task?.name)
         binding.taskDescriptionEditText.setText(task?.description)
-        initToolBar()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolBar()
+    }
+
+    private fun initToolBar() {
         NavigationUI.setupWithNavController(binding.addTaskToolbar, findNavController())
         binding.addTaskToolbar.apply {
+            title = when (jumpFrom) {
+                Constants.ADD -> getString(R.string.list_add_item)
+                Constants.EDIT -> getString(R.string.list_edit_item)
+                else -> getString(R.string.list_add_item)
+            }
             inflateMenu(R.menu.add_task_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
@@ -65,22 +73,14 @@ class AddTaskFragment : Fragment() {
                     else -> false
                 }
             }
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener {
+                findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
+                    sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
+                })
+            }
         }
-    }
 
-    private fun initToolBar() {
-        val toolbar = binding.addTaskToolbar
-        when (jumpFrom) {
-            Constants.ADD -> toolbar.title = getString(R.string.list_add_item)
-            Constants.EDIT -> toolbar.title = getString(R.string.list_edit_item)
-            else -> toolbar.title = getString(R.string.list_add_item)
-        }
-        toolbar.setNavigationIcon(R.drawable.ic_back)
-        toolbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
-                sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
-            })
-        }
     }
 
     private fun insertTask() {

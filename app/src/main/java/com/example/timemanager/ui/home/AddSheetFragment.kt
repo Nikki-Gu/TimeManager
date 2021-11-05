@@ -42,12 +42,12 @@ class AddSheetFragment : Fragment() {
         _binding = AddSheetFragmentBinding.inflate(inflater, container, false)
         jumpFrom = arguments?.getInt(Constants.FROM, Constants.ADD)
         sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
-        initToolBar()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolBar()
         if (jumpFrom == Constants.EDIT) {
             val sheet = sheetId.let {
                 TimeManagerDatabase.getInstance(requireContext()).sheetDao()
@@ -63,20 +63,17 @@ class AddSheetFragment : Fragment() {
     }
 
     private fun initToolBar() {
-        val toolbar = binding.addSheetToolbar
-        when (jumpFrom) {
-            Constants.ADD -> toolbar.title = getString(R.string.add_sheet)
-            Constants.EDIT -> toolbar.title = getString(R.string.edit_sheet)
-            else -> toolbar.title = getString(R.string.add_sheet)
-        }
-        toolbar.apply {
+        NavigationUI.setupWithNavController(binding.addSheetToolbar, findNavController())
+        binding.addSheetToolbar.apply {
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
-        }
-        NavigationUI.setupWithNavController(binding.addSheetToolbar, findNavController())
-        binding.addSheetToolbar.apply {
+            title = when (jumpFrom) {
+                Constants.ADD -> getString(R.string.add_sheet)
+                Constants.EDIT -> getString(R.string.edit_sheet)
+                else -> getString(R.string.add_sheet)
+            }
             inflateMenu(R.menu.add_sheet_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
