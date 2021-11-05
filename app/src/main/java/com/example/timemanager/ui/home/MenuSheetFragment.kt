@@ -75,13 +75,13 @@ class MenuSheetFragment : Fragment() {
                 // homeViewModel?.setProjectSelectedId(sheet.id)
                 sheetsAdapter.sheetSelected = sheet.id
                 sheetsAdapter.notifyDataSetChanged()
-                findNavController().navigate(R.id.navigation_todo, Bundle().apply {
+                findNavController().navigate(R.id.action_navigation_menu_sheet_to_navigation_todo, Bundle().apply {
                     putInt(Constants.SHEET_ID, sheet.id)
                 })
             }
 
             override fun onEditSheetClick(sheet: Sheet) {
-                findNavController().navigate(R.id.navigation_add_sheet, Bundle().apply {
+                findNavController().navigate(R.id.action_navigation_menu_sheet_to_navigation_add_sheet, Bundle().apply {
                     putInt(Constants.FROM, Constants.EDIT)
                     putInt(Constants.SHEET_ID, sheet.id)
                 })
@@ -95,14 +95,14 @@ class MenuSheetFragment : Fragment() {
             title = "清单列表"
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                findNavController().navigate(R.id.navigation_todo)
+                findNavController().navigate(R.id.action_navigation_menu_sheet_to_navigation_todo)
             }
             inflateMenu(R.menu.top_sheet_menu)
             setOnMenuItemClickListener {
                 when (it.itemId) {
                     R.id.add_sheet -> {
                         // 点击右上角+号
-                        findNavController().navigate(R.id.navigation_add_sheet)
+                        findNavController().navigate(R.id.action_navigation_menu_sheet_to_navigation_add_sheet)
                         sheetsAmount = getSheetAmount()
                         true
                     }

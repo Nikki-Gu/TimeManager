@@ -13,7 +13,17 @@
         <action
                 android:id="@+id/action_navigation_todo_to_navigation_menu_sheet"
                 app:destination="@id/navigation_menu_sheet"
-                app:enterAnim="@android:anim/fade_in" />
+                app:enterAnim="@anim/slide_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/slide_out" />
+        <action
+                android:id="@+id/action_navigation_todo_to_navigation_add_task"
+                app:destination="@id/navigation_add_task"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment
@@ -34,17 +44,46 @@
     <fragment
             android:id="@+id/navigation_add_task"
             android:name="com.example.timemanager.ui.home.AddTaskFragment"
-            tools:layout="@layout/add_task_fragment" />
+            tools:layout="@layout/add_task_fragment" >
+        <action
+                android:id="@+id/action_navigation_add_task_to_navigation_todo"
+                app:destination="@id/navigation_todo"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_menu_sheet"
             android:name="com.example.timemanager.ui.home.MenuSheetFragment"
-            tools:layout="@layout/menu_sheet_fragment" />
+            tools:layout="@layout/menu_sheet_fragment" >
+        <action
+                android:id="@+id/action_navigation_menu_sheet_to_navigation_todo"
+                app:destination="@id/navigation_todo"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/slide_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/slide_out" />
+        <action
+                android:id="@+id/action_navigation_menu_sheet_to_navigation_add_sheet"
+                app:destination="@id/navigation_add_sheet"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_add_sheet"
             android:name="com.example.timemanager.ui.home.AddSheetFragment"
-            tools:layout="@layout/add_sheet_fragment" />
+            tools:layout="@layout/add_sheet_fragment" >
+        <action
+                android:id="@+id/action_navigation_add_sheet_to_navigation_menu_sheet"
+                app:destination="@id/navigation_menu_sheet"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+    </fragment>
 
     <fragment
             android:id="@+id/navigation_timing"

@@ -61,7 +61,7 @@ class HomeFragment : Fragment() {
             when (it.itemId) {
                 R.id.list_add -> {
                     // 点击右上角+号
-                    findNavController().navigate(R.id.navigation_add_task)
+                    findNavController().navigate(R.id.action_navigation_todo_to_navigation_add_task)
                     true
                 }
                 R.id.menu_sheet -> {
@@ -100,7 +100,7 @@ class HomeFragment : Fragment() {
         }
         tasksAdapter.taskClickListener = object : TasksAdapter.TaskClickListener {
             override fun onTaskEditClick(taskId: Int, card: MaterialCardView) {
-                findNavController().navigate(R.id.navigation_add_task, Bundle().apply {
+                findNavController().navigate(R.id.action_navigation_todo_to_navigation_add_task, Bundle().apply {
                     putInt(Constants.FROM, Constants.EDIT)
                     putInt(Constants.TASK_ID, taskId)
                 })
