@@ -72,7 +72,7 @@ class AddSheetFragment : Fragment() {
         toolbar.apply {
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                findNavController().navigate(R.id.navigation_menu_sheet)
+                findNavController().navigateUp()
             }
         }
         NavigationUI.setupWithNavController(binding.addSheetToolbar, findNavController())

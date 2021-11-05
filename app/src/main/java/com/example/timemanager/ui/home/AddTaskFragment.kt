@@ -25,6 +25,7 @@ class AddTaskFragment : Fragment() {
     private val binding get() = _binding!!
     private var jumpFrom: Int? = null
     private var taskId: Int? = null
+    private var sheetId: Int? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -35,6 +36,7 @@ class AddTaskFragment : Fragment() {
         _binding = AddTaskFragmentBinding.inflate(inflater, container, false)
         jumpFrom = arguments?.getInt(Constants.FROM, 1)
         taskId = arguments?.getInt(Constants.TASK_ID)
+        sheetId = arguments?.getInt(Constants.SHEET_ID)
         val task = taskId?.let {
             TimeManagerDatabase.getInstance(requireContext()).taskDao()
                 .getTask(it).toDomain()
@@ -75,7 +77,9 @@ class AddTaskFragment : Fragment() {
         }
         toolbar.setNavigationIcon(R.drawable.ic_back)
         toolbar.setNavigationOnClickListener {
-            findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
+            findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
+                sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
+            })
         }
     }
 
@@ -87,13 +91,17 @@ class AddTaskFragment : Fragment() {
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
             it.hideSoftKeyboard()
-            createTask(name, 1, description).toEntity()?.let { taskEntity ->
-                TimeManagerDatabase.getInstance(it)
-                    .taskDao()
-                    .insertTask(taskEntity)
+            sheetId?.let { sheetId ->
+                createTask(name, sheetId, description).toEntity()?.let { taskEntity ->
+                    TimeManagerDatabase.getInstance(it)
+                        .taskDao()
+                        .insertTask(taskEntity)
+                }
             }
         }
-        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
+        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
+            sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
+        })
     }
 
     private fun updateTask() {
@@ -104,15 +112,19 @@ class AddTaskFragment : Fragment() {
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
             it.hideSoftKeyboard()
-            taskId?.let { it1 ->
-                createUpdateTask(it1, name, 1, description).toEntity()?.let { taskEntity ->
-                    TimeManagerDatabase.getInstance(it)
-                        .taskDao()
-                        .updateTask(taskEntity)
+            taskId?.let { taskId ->
+                sheetId?.let { sheetId ->
+                    createUpdateTask(taskId, name, sheetId, description).toEntity()?.let { taskEntity ->
+                        TimeManagerDatabase.getInstance(it)
+                            .taskDao()
+                            .updateTask(taskEntity)
+                    }
                 }
             }
         }
-        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo)
+        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
+            sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
+        })
     }
 
     private fun validateTaskName(): Boolean {

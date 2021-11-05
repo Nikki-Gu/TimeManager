@@ -61,7 +61,9 @@ class HomeFragment : Fragment() {
             when (it.itemId) {
                 R.id.list_add -> {
                     // 点击右上角+号
-                    findNavController().navigate(R.id.action_navigation_todo_to_navigation_add_task)
+                    findNavController().navigate(R.id.action_navigation_todo_to_navigation_add_task, Bundle().apply {
+                        putInt(Constants.SHEET_ID, sheetId)
+                    })
                     true
                 }
                 R.id.menu_sheet -> {
@@ -103,6 +105,7 @@ class HomeFragment : Fragment() {
                 findNavController().navigate(R.id.action_navigation_todo_to_navigation_add_task, Bundle().apply {
                     putInt(Constants.FROM, Constants.EDIT)
                     putInt(Constants.TASK_ID, taskId)
+                    putInt(Constants.SHEET_ID, sheetId)
                 })
             }
 
