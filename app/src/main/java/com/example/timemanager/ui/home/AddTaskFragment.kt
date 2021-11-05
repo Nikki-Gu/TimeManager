@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddTaskFragmentBinding
@@ -15,7 +16,6 @@ import com.example.timemanager.db.model.createUpdateTask
 import com.example.timemanager.extensions.hideSoftKeyboard
 import com.example.timemanager.repository.mapper.TaskMapper.toDomain
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
-import com.example.timemanager.ui.home.utils.Constants
 
 /**
  * A [Fragment] to create task.
@@ -23,9 +23,8 @@ import com.example.timemanager.ui.home.utils.Constants
 class AddTaskFragment : Fragment() {
     private var _binding: AddTaskFragmentBinding? = null
     private val binding get() = _binding!!
-    private var jumpFrom: Int? = null
-    private var taskId: Int? = null
-    private var sheetId: Int? = null
+
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -34,39 +33,42 @@ class AddTaskFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AddTaskFragmentBinding.inflate(inflater, container, false)
-        jumpFrom = arguments?.getInt(Constants.FROM, 1)
-        taskId = arguments?.getInt(Constants.TASK_ID)
-        sheetId = arguments?.getInt(Constants.SHEET_ID)
-        val task = taskId?.let {
-            TimeManagerDatabase.getInstance(requireContext()).taskDao()
-                .getTask(it).toDomain()
-        }
-        binding.taskNameEditText.setText(task?.name)
-        binding.taskDescriptionEditText.setText(task?.description)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initView()
+    }
+
+    private fun initView() {
         initToolBar()
+        if (viewModel.isEdit()) {
+            val task = viewModel.getEditTaskId()?.let {
+                TimeManagerDatabase.getInstance(requireContext()).taskDao()
+                    .getTask(it).toDomain()
+            }
+            binding.taskNameEditText.setText(task?.name)
+            binding.taskDescriptionEditText.setText(task?.description)
+        }
     }
 
     private fun initToolBar() {
         NavigationUI.setupWithNavController(binding.addTaskToolbar, findNavController())
         binding.addTaskToolbar.apply {
-            title = when (jumpFrom) {
-                Constants.ADD -> getString(R.string.list_add_item)
-                Constants.EDIT -> getString(R.string.list_edit_item)
-                else -> getString(R.string.list_add_item)
+            title = if (viewModel.isEdit()) {
+                getString(R.string.list_edit_item)
+            } else {
+                getString(R.string.list_add_item)
             }
             inflateMenu(R.menu.add_task_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.save_task -> {
-                        when (jumpFrom) {
-                            Constants.ADD -> insertTask()
-                            Constants.EDIT -> updateTask()
-                            else -> insertTask()
+                        if (viewModel.isEdit()) {
+                            updateTask()
+                        } else {
+                            insertTask()
                         }
                         true
                     }
@@ -75,12 +77,9 @@ class AddTaskFragment : Fragment() {
             }
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
-                    sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
-                })
+                findNavController().navigateUp()
             }
         }
-
     }
 
     private fun insertTask() {
@@ -91,7 +90,7 @@ class AddTaskFragment : Fragment() {
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
             it.hideSoftKeyboard()
-            sheetId?.let { sheetId ->
+            viewModel.getSheetSelectedId().let { sheetId ->
                 createTask(name, sheetId, description).toEntity()?.let { taskEntity ->
                     TimeManagerDatabase.getInstance(it)
                         .taskDao()
@@ -99,9 +98,7 @@ class AddTaskFragment : Fragment() {
                 }
             }
         }
-        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
-            sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
-        })
+        findNavController().navigateUp()
     }
 
     private fun updateTask() {
@@ -112,23 +109,21 @@ class AddTaskFragment : Fragment() {
         val description = binding.taskDescriptionEditText.text.toString()
         activity?.let {
             it.hideSoftKeyboard()
-            taskId?.let { taskId ->
-                sheetId?.let { sheetId ->
-                    createUpdateTask(taskId, name, sheetId, description).toEntity()?.let { taskEntity ->
-                        TimeManagerDatabase.getInstance(it)
-                            .taskDao()
-                            .updateTask(taskEntity)
-                    }
+            viewModel.getEditTaskId()?.let { taskId ->
+                viewModel.getSheetSelectedId().let { sheetId ->
+                    createUpdateTask(taskId, name, sheetId, description).toEntity()
+                        ?.let { taskEntity ->
+                            TimeManagerDatabase.getInstance(it)
+                                .taskDao()
+                                .updateTask(taskEntity)
+                        }
                 }
             }
         }
-        findNavController().navigate(R.id.action_navigation_add_task_to_navigation_todo, Bundle().apply {
-            sheetId?.let { it1 -> putInt(Constants.SHEET_ID, it1) }
-        })
+        findNavController().navigateUp()
     }
 
     private fun validateTaskName(): Boolean {
-        // binding.taskNameInput.clearError()
         return if (binding.taskNameEditText.text.isNullOrBlank()) {
             binding.taskNameInput.error = getString(R.string.must_be_not_empty)
             false

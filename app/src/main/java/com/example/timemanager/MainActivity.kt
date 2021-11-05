@@ -2,7 +2,6 @@ package com.example.timemanager
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -16,7 +15,6 @@ import com.example.timemanager.db.model.createSheet
 import com.example.timemanager.db.model.createTask
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
-import com.example.timemanager.ui.home.HomeViewModel
 import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,8 +22,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
-    private val homeViewModel by viewModels<HomeViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment_activity_main)
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_todo,
+                R.id.home_navigation,
                 R.id.navigation_analysis,
                 R.id.navigation_pet,
                 R.id.navigation_setting
@@ -76,7 +72,7 @@ class MainActivity : AppCompatActivity() {
             // 第一次使用app时显示使用指南
             val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
             val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
-            createSheet("默认清单列表").toEntity()?.let { sheetDao.insertSheet(it)}
+            createSheet("默认清单列表").toEntity()?.let { sheetDao.insertSheet(it) }
             createTask("向右滑动删除", 1).toEntity()?.let { taskDao.insertTask(it) }
             createTask("点击右边图标编辑待办", 1).toEntity()?.let { taskDao.insertTask(it) }
             createTask("点击左边图标标记待办为已完成", 1).toEntity()?.let { taskDao.insertTask(it) }
@@ -90,7 +86,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.navigation_todo,
                 R.id.navigation_analysis,
                 R.id.navigation_pet,
-                R.id.navigation_setting -> {
+                R.id.navigation_setting,
+                R.id.home_navigation -> {
                     binding.navView.visibility = View.VISIBLE
                 }
                 else -> {

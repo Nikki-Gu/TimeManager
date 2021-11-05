@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddSheetFragmentBinding
@@ -16,7 +16,6 @@ import com.example.timemanager.db.model.createUpdateSheet
 import com.example.timemanager.extensions.hideSoftKeyboard
 import com.example.timemanager.repository.mapper.SheetMapper.toDomain
 import com.example.timemanager.repository.mapper.SheetMapper.toEntity
-import com.example.timemanager.ui.home.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 
 /**
@@ -27,11 +26,7 @@ class AddSheetFragment : Fragment() {
     private var _binding: AddSheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    // TODO: homeViewModel不是同一个
-    private val homeViewModel by viewModels<HomeViewModel>()
-
-    private var jumpFrom: Int? = null
-    private var sheetId: Int = Constants.DEFAULT_SHEET_ID
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,26 +35,28 @@ class AddSheetFragment : Fragment() {
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
         _binding = AddSheetFragmentBinding.inflate(inflater, container, false)
-        jumpFrom = arguments?.getInt(Constants.FROM, Constants.ADD)
-        sheetId = arguments?.getInt(Constants.SHEET_ID) ?: Constants.DEFAULT_SHEET_ID
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initToolBar()
-        if (jumpFrom == Constants.EDIT) {
-            val sheet = sheetId.let {
-                TimeManagerDatabase.getInstance(requireContext()).sheetDao()
-                    .getSheet(it).toDomain()
-            }
-            binding.sheetNameEditText.setText(sheet?.name)
-        }
+        initView()
     }
 
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    private fun initView() {
+        initToolBar()
+        if (viewModel.isEdit()) {
+            val sheet = viewModel.getEditSheetId()?.let {
+                TimeManagerDatabase.getInstance(requireContext()).sheetDao()
+                    .getSheet(it).toDomain()
+            }
+            binding.sheetNameEditText.setText(sheet?.name)
+        }
     }
 
     private fun initToolBar() {
@@ -69,19 +66,19 @@ class AddSheetFragment : Fragment() {
             setNavigationOnClickListener {
                 findNavController().navigateUp()
             }
-            title = when (jumpFrom) {
-                Constants.ADD -> getString(R.string.add_sheet)
-                Constants.EDIT -> getString(R.string.edit_sheet)
-                else -> getString(R.string.add_sheet)
+            title = if (viewModel.isEdit()) {
+                getString(R.string.edit_sheet)
+            } else {
+                getString(R.string.add_sheet)
             }
             inflateMenu(R.menu.add_sheet_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.save_sheet -> {
-                        when (jumpFrom) {
-                            Constants.ADD -> insertSheet()
-                            Constants.EDIT -> updateSheet()
-                            else -> insertSheet()
+                        if (viewModel.isEdit()) {
+                            updateSheet()
+                        } else {
+                            insertSheet()
                         }
                         true
                     }
@@ -115,10 +112,12 @@ class AddSheetFragment : Fragment() {
         val name = binding.sheetNameEditText.text.toString()
         activity?.let {
             it.hideSoftKeyboard()
-            createUpdateSheet(sheetId, name).toEntity()?.let { sheetEntity ->
-                TimeManagerDatabase.getInstance(it)
-                    .sheetDao()
-                    .updateSheet(sheetEntity)
+            viewModel.getEditSheetId()?.let { editSheetId ->
+                createUpdateSheet(editSheetId, name).toEntity()?.let { sheetEntity ->
+                    TimeManagerDatabase.getInstance(it)
+                        .sheetDao()
+                        .updateSheet(sheetEntity)
+                }
             }
         }
         findNavController().navigateUp()
