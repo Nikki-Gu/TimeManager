@@ -12,26 +12,23 @@ import kotlinx.coroutines.flow.Flow
 interface TaskDao {
 
     @Query("DELETE FROM task WHERE id = :id")
-    fun deleteTask(id: Int): Int
-
-    @Query("DELETE FROM task")
-    fun deleteAll()
+    suspend fun deleteTask(id: Int)
 
     @Query("SELECT * FROM task WHERE id = :id")
-    fun getTask(id: Int): TaskEntity
+    fun getTask(id: Int): Flow<TaskEntity>
 
     @Query("SELECT * FROM task ORDER BY id ASC")
-    fun getTasks(): List<TaskEntity>
+    fun getTasks(): Flow<List<TaskEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertTask(task: TaskEntity): Long
+    suspend fun insertTask(task: TaskEntity): Long
 
     @Query("UPDATE task SET state = 'DOING' WHERE id = :id")
-    fun setTaskDoing(id: Int)
+    suspend fun setTaskDoing(id: Int)
 
     @Query("UPDATE task SET state = 'DONE' WHERE id = :id")
-    fun setTaskDone(id: Int)
+    suspend fun setTaskDone(id: Int)
 
     @Update
-    fun updateTask(task: TaskEntity)
+    suspend fun updateTask(task: TaskEntity)
 }

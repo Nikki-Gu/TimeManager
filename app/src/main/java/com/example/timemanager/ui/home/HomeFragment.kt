@@ -14,27 +14,42 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentHomeBinding
-import com.example.timemanager.db.TimeManagerDatabase
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
 import com.google.android.material.card.MaterialCardView
 import com.example.timemanager.db.model.Task
 import com.example.timemanager.db.model.TaskState
-import com.example.timemanager.repository.mapper.SheetMapper.toDomain
+import com.example.timemanager.di.RepositoryModule
+import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.ui.SwipeController
 import com.example.timemanager.ui.home.adapter.TasksAdapter
 import com.example.timemanager.ui.home.utils.Constants
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
+    @Inject
+    lateinit var taskDao: TaskDao
 
-    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
+    @Inject
+    lateinit var sheetDao: SheetDao
 
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
     private val tasksAdapter = TasksAdapter()
-    private var sheetId: Int = Constants.DEFAULT_SHEET_ID
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -47,12 +62,9 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sheetId = viewModel.getSheetSelectedId()
-        updateSheet()
         initToolBar()
         postponeEnterTransition()
         initTasksRecyclerView()
-        initSheetSelectedIdObserver()
         initSheetSelectedObserver()
         setSwipeActions()
     }
@@ -99,13 +111,11 @@ class HomeFragment : Fragment() {
             }
 
             override fun onTaskDoneClick(task: Task) {
-                TimeManagerDatabase.getInstance(requireContext()).taskDao().setTaskDone(task.id)
-                updateSheet()
+                viewModel.setTaskDone(task.id)
             }
 
             override fun onTaskDoingClick(task: Task) {
-                TimeManagerDatabase.getInstance(requireContext()).taskDao().setTaskDoing(task.id)
-                updateSheet()
+                viewModel.setTaskDoing(task.id)
             }
 
             override fun onTaskTimingClick(task: Task) {
@@ -116,18 +126,7 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun initSheetSelectedIdObserver() {
-        viewModel.sheetSelectedId.observe(
-            viewLifecycleOwner,
-            { sheetId ->
-                val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao()
-                    .getSheet(sheetId)
-                    .toDomain()
-                viewModel.setSheetSelected(sheet)
-            }
-        )
-    }
-
+    @kotlinx.coroutines.ExperimentalCoroutinesApi
     private fun initSheetSelectedObserver() {
         viewModel.sheetSelected.observe(
             viewLifecycleOwner,
@@ -149,15 +148,11 @@ class HomeFragment : Fragment() {
 
     private fun showEmptyListIllustration() {
         binding.emptyList.visibility = View.VISIBLE
-        //remove toolbar scroll flags => 不能上下滑动
-        (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags = 0
     }
 
     private fun hideEmptyListIllustration() {
         binding.emptyList.visibility = View.GONE
-        //set toolbar scroll flags => 可以上下滑动
-        (binding.toolbar.layoutParams as AppBarLayout.LayoutParams).scrollFlags =
-            AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL or AppBarLayout.LayoutParams.SCROLL_FLAG_SNAP or AppBarLayout.LayoutParams.SCROLL_FLAG_ENTER_ALWAYS
+        // 改为均不能上下滑动
     }
 
     private fun setProgressValue(progress: Int) {
@@ -189,8 +184,8 @@ class HomeFragment : Fragment() {
                 if (task?.state == TaskState.DONE)
                     done++
             }
-            "$done / $total"
-        } ?: "0 / 0"
+            "$done/$total"
+        } ?: "0/0"
 
     private fun setSwipeActions() {
         val swipeController = SwipeController(
@@ -199,22 +194,13 @@ class HomeFragment : Fragment() {
                 SwipeController.SwipeControllerActions {
                 override fun onDelete(position: Int) {
                     tasksAdapter.currentList[position]?.id?.let { taskId ->
-                        TimeManagerDatabase.getInstance(requireContext()).taskDao()
-                            .deleteTask(taskId)
+                        viewModel.deleteTask(taskId)
                     }
-                    updateSheet()
                 }
             }
         )
         val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(binding.tasksRecyclerView)
-    }
-
-    private fun updateSheet() {
-        val sheet = TimeManagerDatabase.getInstance(requireContext()).sheetDao()
-            .getSheet(sheetId)
-            .toDomain()
-        viewModel.setSheetSelected(sheet)
     }
 
     override fun onDestroyView() {

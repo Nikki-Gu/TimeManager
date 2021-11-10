@@ -1,4 +1,4 @@
-package com.example.timemanager.ui.home
+package com.example.timemanager.ui.home.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,23 +10,42 @@ import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddSheetFragmentBinding
-import com.example.timemanager.db.TimeManagerDatabase
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.createSheet
 import com.example.timemanager.db.model.createUpdateSheet
+import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.extensions.hideSoftKeyboard
-import com.example.timemanager.repository.mapper.SheetMapper.toDomain
-import com.example.timemanager.repository.mapper.SheetMapper.toEntity
+import com.example.timemanager.repository.UserPreferencesRepository
+import com.example.timemanager.ui.home.HomeViewModel
+import com.example.timemanager.ui.home.HomeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * a [Fragment] to add Sheet
  */
 @AndroidEntryPoint
 class AddSheetFragment : Fragment() {
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var sheetDao: SheetDao
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
     private var _binding: AddSheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,12 +69,17 @@ class AddSheetFragment : Fragment() {
 
     private fun initView() {
         initToolBar()
-        if (viewModel.isEdit()) {
-            val sheet = viewModel.getEditSheetId()?.let {
-                TimeManagerDatabase.getInstance(requireContext()).sheetDao()
-                    .getSheet(it).toDomain()
+        viewModel.apply {
+            if(isEdit()) {
+                getEditSheetId()?.let {
+                    getSheet(it).observe(
+                        viewLifecycleOwner,
+                        { sheet ->
+                            binding.sheetNameEditText.setText(sheet?.name)
+                        }
+                    )
+                }
             }
-            binding.sheetNameEditText.setText(sheet?.name)
         }
     }
 
@@ -94,14 +118,8 @@ class AddSheetFragment : Fragment() {
             return
         }
         val name = binding.sheetNameEditText.text.toString()
-        activity?.let {
-            it.hideSoftKeyboard()
-            createSheet(name).toEntity()?.let { sheetEntity ->
-                TimeManagerDatabase.getInstance(it)
-                    .sheetDao()
-                    .insertSheet(sheetEntity)
-            }
-        }
+        viewModel.insertSheet(createSheet(name)).observe(viewLifecycleOwner) {}
+        activity?.hideSoftKeyboard()
         findNavController().navigateUp()
     }
 
@@ -110,15 +128,9 @@ class AddSheetFragment : Fragment() {
             return
         }
         val name = binding.sheetNameEditText.text.toString()
-        activity?.let {
-            it.hideSoftKeyboard()
-            viewModel.getEditSheetId()?.let { editSheetId ->
-                createUpdateSheet(editSheetId, name).toEntity()?.let { sheetEntity ->
-                    TimeManagerDatabase.getInstance(it)
-                        .sheetDao()
-                        .updateSheet(sheetEntity)
-                }
-            }
+        activity?.hideSoftKeyboard()
+        viewModel.getEditSheetId()?.let { editSheetId ->
+            viewModel.updateSheet(createUpdateSheet(editSheetId, name))
         }
         findNavController().navigateUp()
     }

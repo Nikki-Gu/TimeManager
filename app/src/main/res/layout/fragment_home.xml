@@ -11,8 +11,7 @@
             style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior"
-            app:liftOnScroll="true">
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$Behavior">
 
         <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/toolbar"
@@ -20,15 +19,16 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
                 app:titleTextColor="@color/dim_grey"
+                app:layout_scrollFlags="noScroll"
                 app:popupTheme="@style/ToolbarPopupTheme">
         </com.google.android.material.appbar.MaterialToolbar>
 
         <LinearLayout
                 android:id="@+id/progress_bar_layout"
                 android:layout_width="match_parent"
-                android:layout_height="72dp"
+                android:layout_height="60dp"
                 android:orientation="vertical"
-                app:layout_scrollFlags="scroll|snap|enterAlways">
+                app:layout_scrollFlags="noScroll">
 
             <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/progress_text_view"
@@ -42,7 +42,7 @@
                     android:textAppearance="?attr/textAppearanceOverline"
                     android:textColor="@color/material_on_surface_emphasis_medium"
                     android:textSize="12sp"
-                    tools:text="50%" />
+                    tools:text="1/2" />
 
             <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/progress_bar"
@@ -80,6 +80,7 @@
             android:orientation="vertical"
             android:visibility="visible">
 
+        <!-- TODO： add a drawable resource to this imageView -->
         <ImageView
                 android:layout_width="240dp"
                 android:layout_height="36dp"

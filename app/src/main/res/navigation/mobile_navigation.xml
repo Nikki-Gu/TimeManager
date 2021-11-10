@@ -40,7 +40,7 @@
 
         <fragment
                 android:id="@+id/navigation_menu_sheet"
-                android:name="com.example.timemanager.ui.home.MenuSheetFragment"
+                android:name="com.example.timemanager.ui.home.menu.MenuSheetFragment"
                 tools:layout="@layout/menu_sheet_fragment" >
             <action
                     android:id="@+id/action_navigation_menu_sheet_to_navigation_todo"
@@ -60,7 +60,7 @@
 
         <fragment
                 android:id="@+id/navigation_add_sheet"
-                android:name="com.example.timemanager.ui.home.AddSheetFragment"
+                android:name="com.example.timemanager.ui.home.menu.AddSheetFragment"
                 tools:layout="@layout/add_sheet_fragment" >
             <action
                     android:id="@+id/action_navigation_add_sheet_to_navigation_menu_sheet"
@@ -73,12 +73,12 @@
 
         <fragment
                 android:id="@+id/navigation_timing"
-                android:name="com.example.timemanager.ui.home.TimingFragment"
+                android:name="com.example.timemanager.ui.home.timing.TimingFragment"
                 tools:layout="@layout/fragment_timing" />
 
         <fragment
                 android:id="@+id/navigation_count_down"
-                android:name="com.example.timemanager.ui.home.CountDownFragment"
+                android:name="com.example.timemanager.ui.home.timing.CountDownFragment"
                 tools:layout="@layout/fragment_count_down" />
 
     </navigation>

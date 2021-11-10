@@ -1,4 +1,4 @@
-package com.example.timemanager.ui.home
+package com.example.timemanager.ui.home.timing
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
-import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
 import androidx.core.view.isVisible
 import com.example.timemanager.databinding.FragmentCountDownBinding

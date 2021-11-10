@@ -17,6 +17,7 @@ import com.example.timemanager.repository.mapper.SheetMapper.toEntity
 import com.example.timemanager.repository.mapper.TaskMapper.toEntity
 import com.google.android.material.navigation.NavigationBarView
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.runBlocking
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -59,7 +60,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun initDatabase() {
         Room.databaseBuilder(this, TimeManagerDatabase::class.java, "TimeManager")
-            .allowMainThreadQueries()
             .build()
 
         // 判断是否第一次使用该app
@@ -72,10 +72,11 @@ class MainActivity : AppCompatActivity() {
             // 第一次使用app时显示使用指南
             val taskDao = TimeManagerDatabase.getInstance(this).taskDao()
             val sheetDao = TimeManagerDatabase.getInstance(this).sheetDao()
-            createSheet("默认清单列表").toEntity()?.let { sheetDao.insertSheet(it) }
-            createTask("向右滑动删除", 1).toEntity()?.let { taskDao.insertTask(it) }
-            createTask("点击右边图标编辑待办", 1).toEntity()?.let { taskDao.insertTask(it) }
-            createTask("点击左边图标标记待办为已完成", 1).toEntity()?.let { taskDao.insertTask(it) }
+            createSheet("默认清单列表").toEntity()?.let { runBlocking { sheetDao.insertSheet(it) } }
+            createTask("向右滑动删除", 1).toEntity()?.let { runBlocking { taskDao.insertTask(it) } }
+            createTask("点击右边图标编辑待办", 1).toEntity()?.let { runBlocking { taskDao.insertTask(it) } }
+            createTask("点击左边图标标记待办为已完成", 1).toEntity()
+                ?.let { runBlocking { taskDao.insertTask(it) } }
         }
     }
 

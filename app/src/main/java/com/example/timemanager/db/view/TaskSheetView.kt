@@ -15,7 +15,9 @@
  */
 
 package com.example.timemanager.db.view
-
+/*
+    not used now
+ */
 import androidx.room.ColumnInfo
 import androidx.room.DatabaseView
 import androidx.room.Embedded

@@ -10,21 +10,40 @@ import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddTaskFragmentBinding
-import com.example.timemanager.db.TimeManagerDatabase
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.createTask
 import com.example.timemanager.db.model.createUpdateTask
+import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.extensions.hideSoftKeyboard
-import com.example.timemanager.repository.mapper.TaskMapper.toDomain
-import com.example.timemanager.repository.mapper.TaskMapper.toEntity
+import com.example.timemanager.repository.UserPreferencesRepository
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * A [Fragment] to create task.
  */
+@AndroidEntryPoint
 class AddTaskFragment : Fragment() {
     private var _binding: AddTaskFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var sheetDao: SheetDao
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,13 +62,18 @@ class AddTaskFragment : Fragment() {
 
     private fun initView() {
         initToolBar()
-        if (viewModel.isEdit()) {
-            val task = viewModel.getEditTaskId()?.let {
-                TimeManagerDatabase.getInstance(requireContext()).taskDao()
-                    .getTask(it).toDomain()
+        viewModel.apply {
+            if(isEdit()) {
+                getEditTaskId()?.let {
+                    getTask(it).observe(
+                        viewLifecycleOwner,
+                        { task ->
+                            binding.taskNameEditText.setText(task?.name)
+                            binding.taskNameEditText.setText(task?.name)
+                        }
+                    )
+                }
             }
-            binding.taskNameEditText.setText(task?.name)
-            binding.taskDescriptionEditText.setText(task?.description)
         }
     }
 
@@ -88,16 +112,8 @@ class AddTaskFragment : Fragment() {
         }
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
-        activity?.let {
-            it.hideSoftKeyboard()
-            viewModel.getSheetSelectedId().let { sheetId ->
-                createTask(name, sheetId, description).toEntity()?.let { taskEntity ->
-                    TimeManagerDatabase.getInstance(it)
-                        .taskDao()
-                        .insertTask(taskEntity)
-                }
-            }
-        }
+        viewModel.insertTask(name, description).observe(viewLifecycleOwner) {}
+        activity?.hideSoftKeyboard()
         findNavController().navigateUp()
     }
 
@@ -107,18 +123,9 @@ class AddTaskFragment : Fragment() {
         }
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
-        activity?.let {
-            it.hideSoftKeyboard()
-            viewModel.getEditTaskId()?.let { taskId ->
-                viewModel.getSheetSelectedId().let { sheetId ->
-                    createUpdateTask(taskId, name, sheetId, description).toEntity()
-                        ?.let { taskEntity ->
-                            TimeManagerDatabase.getInstance(it)
-                                .taskDao()
-                                .updateTask(taskEntity)
-                        }
-                }
-            }
+        activity?.hideSoftKeyboard()
+        viewModel.getEditTaskId()?.let { taskId ->
+            viewModel.updateTask(taskId, name, description)
         }
         findNavController().navigateUp()
     }

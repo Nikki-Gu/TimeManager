@@ -1,9 +1,10 @@
-package com.example.timemanager.ui.home
+package com.example.timemanager.ui.home.menu
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
@@ -11,19 +12,39 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.MenuSheetFragmentBinding
-import com.example.timemanager.db.TimeManagerDatabase
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.Sheet
-import com.example.timemanager.repository.mapper.SheetMapper.toDomain
+import com.example.timemanager.di.RepositoryModule
+import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.ui.SwipeController
+import com.example.timemanager.ui.home.HomeViewModel
+import com.example.timemanager.ui.home.HomeViewModelFactory
 import com.example.timemanager.ui.home.adapter.SheetsAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MenuSheetFragment : Fragment() {
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var sheetDao: SheetDao
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
     private var _binding: MenuSheetFragmentBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation)
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
 
     private val sheetsAdapter = SheetsAdapter()
 
@@ -38,10 +59,12 @@ class MenuSheetFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sheetsAdapter.sheetSelected = viewModel.getSheetSelectedId()
+        sheetsAdapter.sheetSelected = viewModel.sheetSelectedId.value
         initToolBar()
         initSheetRecycleView()
-        setSwipeActions()
+        initSheetSelectedIdObserver()
+        initSheetClickListener()
+        initDeleteSheetObserver()
     }
 
     override fun onDestroyView() {
@@ -76,18 +99,28 @@ class MenuSheetFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = sheetsAdapter
         }
-        // TODO 数据库相关变化-待优化为观察者模式
-        val sheetsList =
-            TimeManagerDatabase.getInstance(requireContext()).sheetDao().getSheets().map {
-                it.toDomain()
+        viewModel.sheets.observe(
+            viewLifecycleOwner,
+            {
+                sheetsAdapter.submitList(it)
             }
-        sheetsAdapter.submitList(sheetsList)
+        )
+    }
 
+    private fun initSheetSelectedIdObserver() {
+        viewModel.sheetSelectedId.observe(
+            viewLifecycleOwner,
+            {
+                sheetsAdapter.sheetSelected = it
+                sheetsAdapter.notifyDataSetChanged()
+            }
+        )
+    }
+
+    private fun initSheetClickListener() {
         sheetsAdapter.sheetClickListener = object : SheetsAdapter.SheetClickListener {
             override fun onSheetClick(sheet: Sheet) {
                 viewModel.setSheetSelectedId(sheet.id)
-                sheetsAdapter.sheetSelected = sheet.id
-                sheetsAdapter.notifyDataSetChanged()
                 findNavController().navigateUp()
             }
 
@@ -99,22 +132,29 @@ class MenuSheetFragment : Fragment() {
         }
     }
 
-    // TODO 最后一个不能删除
-    private fun setSwipeActions() {
-        val swipeControllerActions =
-            object :
-                SwipeController.SwipeControllerActions {
+    private fun initDeleteSheetObserver() {
+        val swipeController = SwipeController(requireContext(), object :
+            SwipeController.SwipeControllerActions {
 
-                override fun onDelete(position: Int) {
-                    sheetsAdapter.currentList[position]?.id?.let { it ->
-                        TimeManagerDatabase.getInstance(requireContext())
-                            .sheetDao()
-                            .deleteSheet(it)
-                        initSheetRecycleView()
+            override fun onDelete(position: Int) {
+                viewModel.sheets.observe(
+                    viewLifecycleOwner,
+                    {
+                        it?.let { list ->
+                            if (list.size > 1) {
+                                sheetsAdapter.currentList[position]?.id?.let { it ->
+                                    viewModel.deleteSheet(it)
+                                }
+                            }
+                        }
                     }
+                )
+                if(viewModel.sheets.value?.size == 1) {
+                    Toast.makeText(requireContext(), "这是最后一个清单，不能删除哦！", Toast.LENGTH_LONG)
+                        .show()
                 }
             }
-        val swipeController = SwipeController(requireContext(), swipeControllerActions)
+        })
         val itemTouchHelper = ItemTouchHelper(swipeController)
         itemTouchHelper.attachToRecyclerView(binding.sheetsRecyclerView)
     }

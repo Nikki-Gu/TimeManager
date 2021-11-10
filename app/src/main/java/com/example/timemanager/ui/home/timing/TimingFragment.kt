@@ -1,4 +1,4 @@
-package com.example.timemanager.ui.home
+package com.example.timemanager.ui.home.timing
 
 import android.os.Bundle
 import android.view.LayoutInflater

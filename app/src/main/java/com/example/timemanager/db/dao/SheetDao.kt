@@ -14,21 +14,18 @@ import kotlinx.coroutines.flow.Flow
 interface SheetDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertSheet(sheet: SheetEntity): Long
+    suspend fun insertSheet(sheet: SheetEntity): Long
 
     @Transaction
     @Query("SELECT * FROM Sheet WHERE id = :id")
-    fun getSheet(id: Int): SheetTasksRelation
-
-    @Query("SELECT * FROM Sheet WHERE name = :name")
-    fun getSheetByName(name: String): SheetTasksRelation
+    fun getSheet(id: Int): Flow<SheetTasksRelation>
 
     @Query("SELECT * FROM Sheet ORDER BY id ASC")
-    fun getSheets(): List<SheetEntity>
+    fun getSheets(): Flow<List<SheetEntity>>
 
     @Query("DELETE FROM Sheet WHERE id = :id")
-    fun deleteSheet(id: Int): Int
+    suspend fun deleteSheet(id: Int)
 
     @Update
-    fun updateSheet(sheet: SheetEntity)
+    suspend fun updateSheet(sheet: SheetEntity)
 }
