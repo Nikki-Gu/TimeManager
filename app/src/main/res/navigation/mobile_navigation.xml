@@ -56,6 +56,9 @@
                     app:exitAnim="@anim/fade_out"
                     app:popEnterAnim="@anim/fade_in"
                     app:popExitAnim="@anim/fade_out" />
+            <action
+                android:id="@+id/action_navigation_menu_sheet_to_navigation_todo2"
+                app:destination="@id/navigation_todo" />
         </fragment>
 
         <fragment

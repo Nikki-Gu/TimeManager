@@ -119,7 +119,9 @@
                         android:imeOptions="actionDone"
                         android:inputType="textCapSentences|textMultiLine"
                         android:paddingStart="0dp" />
+
             </com.google.android.material.textfield.TextInputLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
