@@ -102,6 +102,10 @@ class AnalysisFragment : Fragment() {
             selectDate(it.yearMonth.atDay(1))
         }
 
+        val sumFocusData1=binding.sumFocusData1
+        //sumFocusData1 = 某个数据库接口
+        val todayFocusData1=binding.todayFocusData1
+
         return root
     }
 
