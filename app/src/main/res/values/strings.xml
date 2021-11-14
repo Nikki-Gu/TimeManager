@@ -26,4 +26,11 @@
     <string name="delete_task_button">delete_task_button</string>
     <string name="edit_sheet_button">编辑清单按钮</string>
     <string name="sheet_add_item">添加清单</string>
+    <string name="sum_focus">累计专注</string>
+    <string name="times">次数</string>
+    <string name="today_focus">今日专注</string>
+    <string name="length">时长</string>
+    <string name="sum_length">总时长</string>
+    <string name="avg_length">平均时长</string>
+    <string name="calendar">日历</string>
 </resources>
