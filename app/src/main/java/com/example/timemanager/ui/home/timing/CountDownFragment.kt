@@ -18,9 +18,9 @@ import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.ui.home.HomeViewModel
 import com.example.timemanager.ui.home.HomeViewModelFactory
-import com.example.timemanager.ui.home.utils.Constants
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import android.view.KeyEvent
 
 /**
  * A [Fragment] to count down.
@@ -67,6 +67,20 @@ class CountDownFragment : Fragment(){
         initTimer()
     }
 
+    override fun onResume() {
+        super.onResume()
+        requireView().setFocusableInTouchMode(true)
+        requireView().requestFocus()
+        requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
+            //判断用户点击了手机自带的返回键
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
+                return@setOnKeyListener true
+            }
+            false
+        }
+    }
+
     private fun initToolbar() {
         NavigationUI.setupWithNavController(binding.countDownToolbar, findNavController())
         binding.countDownToolbar.apply {
@@ -75,7 +89,7 @@ class CountDownFragment : Fragment(){
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
-                        findNavController().navigate(R.id.action_navigation_count_down_to_navigation_timing)
+                        findNavController().navigateUp()
                         true
                     }
                     R.id.count_down -> {
