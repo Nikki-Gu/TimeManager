@@ -10,12 +10,22 @@ import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import android.os.Handler
 import androidx.core.view.isVisible
+import androidx.navigation.navGraphViewModels
 import com.example.timemanager.databinding.FragmentCountDownBinding
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
+import com.example.timemanager.di.RepositoryModule
+import com.example.timemanager.repository.UserPreferencesRepository
+import com.example.timemanager.ui.home.HomeViewModel
+import com.example.timemanager.ui.home.HomeViewModelFactory
 import com.example.timemanager.ui.home.utils.Constants
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * A [Fragment] to count down.
  */
+@AndroidEntryPoint
 class CountDownFragment : Fragment(){
     private var _binding: FragmentCountDownBinding? = null
     private val binding get() = _binding!!
@@ -23,21 +33,41 @@ class CountDownFragment : Fragment(){
     private val handler = Handler()
     private var mCountNum = 0
     private var running = false //计时状态
-    private var taskName: String? = null
+
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var sheetDao: SheetDao
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentCountDownBinding.inflate(inflater, container, false)
-        taskName = arguments?.getString(Constants.TASK_NAME)
-        initTimer()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
+        initTimer()
+    }
+
+    private fun initToolbar() {
         NavigationUI.setupWithNavController(binding.countDownToolbar, findNavController())
         binding.countDownToolbar.apply {
             title = "倒计时"
@@ -45,9 +75,7 @@ class CountDownFragment : Fragment(){
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
-                        findNavController().navigate(R.id.navigation_timing, Bundle().apply {
-                            putString(Constants.TASK_NAME, taskName)
-                        })
+                        findNavController().navigate(R.id.action_navigation_count_down_to_navigation_timing)
                         true
                     }
                     R.id.count_down -> {
@@ -58,13 +86,13 @@ class CountDownFragment : Fragment(){
             }
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                findNavController().navigate(R.id.navigation_todo)
+                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
             }
         }
     }
 
     private fun initTimer() {
-        binding.taskName.text = taskName
+        binding.taskName.text = viewModel.getTimingTaskName()
         binding.timingButton.text = "开始专注"
         binding.finishButton.text = "完成专注"
         binding.finishButton.isVisible = false
@@ -98,9 +126,9 @@ class CountDownFragment : Fragment(){
             binding.timingButton.text = "开始专注"
             binding.finishButton.isVisible = false
             mCountNum = 0
-            binding.edHour.setText("00")
-            binding.edMin.setText("00")
-            binding.edSecond.setText("00")
+            binding.edHour.setText(getString(R.string.zero))
+            binding.edMin.setText(getString(R.string.zero))
+            binding.edSecond.setText(getString(R.string.zero))
             running = false
             binding.edHour.isEnabled = true
             binding.edMin.isEnabled = true
@@ -108,14 +136,6 @@ class CountDownFragment : Fragment(){
             handler.removeCallbacks(countDown)
             //TODO: 数据库操作
         }
-
-//        binding.reset.setOnClickListener {
-//            running = false
-//            binding.edHour.isEnabled = true
-//            binding.edMin.isEnabled = true
-//            binding.edSecond.isEnabled = true
-//            mCountNum = 60
-//        }
     }
 
     private val countDown = object : Runnable {
@@ -130,7 +150,6 @@ class CountDownFragment : Fragment(){
                     mCountNum--
                 }
             } else {
-                //TODO
                 binding.timingButton.text = "开始专注"
                 binding.finishButton.isVisible = false
                 binding.edHour.isEnabled = true
