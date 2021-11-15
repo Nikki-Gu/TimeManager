@@ -10,6 +10,7 @@ import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
+import android.view.KeyEvent
 import androidx.core.view.isVisible
 import androidx.navigation.navGraphViewModels
 import com.example.timemanager.db.dao.SheetDao
@@ -64,6 +65,20 @@ class TimingFragment : Fragment(){
         super.onViewCreated(view, savedInstanceState)
         initToolbar()
         initTimer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireView().isFocusableInTouchMode = true
+        requireView().requestFocus()
+        requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
+            //判断用户点击了手机自带的返回键
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                findNavController().navigate(R.id.action_navigation_timing_to_navigation_todo)
+                return@setOnKeyListener true
+            }
+            false
+        }
     }
 
     private fun initToolbar() {

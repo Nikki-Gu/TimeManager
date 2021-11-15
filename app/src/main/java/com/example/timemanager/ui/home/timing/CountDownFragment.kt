@@ -69,7 +69,7 @@ class CountDownFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        requireView().setFocusableInTouchMode(true)
+        requireView().isFocusableInTouchMode = true
         requireView().requestFocus()
         requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
             //判断用户点击了手机自带的返回键
@@ -89,7 +89,7 @@ class CountDownFragment : Fragment(){
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
-                        findNavController().navigateUp()
+                        findNavController().navigate(R.id.action_navigation_count_down_to_navigation_timing)
                         true
                     }
                     R.id.count_down -> {
