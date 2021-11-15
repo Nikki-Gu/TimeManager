@@ -9,13 +9,14 @@
     <com.google.android.material.appbar.AppBarLayout
             style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
                 android:id="@+id/timing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:layout_gravity="center"
                 android:background="@color/white"
                 app:titleTextColor="@color/dim_grey"
                 app:popupTheme="@style/ToolbarPopupTheme"
@@ -35,8 +36,13 @@
                     android:id="@+id/taskName"
                     android:textSize="30sp"
                     android:textColor="@color/black"
-                    android:textStyle="bold"
                     android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            <TextView
+                    android:id="@+id/nullString_1"
+                    android:text=""
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
@@ -48,16 +54,23 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
+            <TextView
+                    android:id="@+id/nullString_2"
+                    android:text=""
+                    android:textSize="30sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
             <Button
                     android:id="@+id/timing_button"
                     android:gravity="center"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
             <Button
                     android:id="@+id/finish_button"
                     android:gravity="center"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
         </LinearLayout>
 
