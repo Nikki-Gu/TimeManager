@@ -77,6 +77,8 @@ class MainActivity : AppCompatActivity() {
             createTask("点击右边图标编辑待办", 1).toEntity()?.let { runBlocking { taskDao.insertTask(it) } }
             createTask("点击左边图标标记待办为已完成", 1).toEntity()
                 ?.let { runBlocking { taskDao.insertTask(it) } }
+            createTask("点击待办进入计时页面", 1).toEntity()
+                ?.let { runBlocking { taskDao.insertTask(it) } }
         }
     }
 
