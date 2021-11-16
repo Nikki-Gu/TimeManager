@@ -25,6 +25,13 @@
                     app:exitAnim="@anim/fade_out"
                     app:popEnterAnim="@anim/fade_in"
                     app:popExitAnim="@anim/fade_out" />
+            <action
+                    android:id="@+id/action_navigation_todo_to_navigation_timing"
+                    app:destination="@id/navigation_timing"
+                    app:enterAnim="@anim/fade_in"
+                    app:exitAnim="@anim/fade_out"
+                    app:popEnterAnim="@anim/fade_in"
+                    app:popExitAnim="@anim/fade_out" />
         </fragment>
 
         <fragment
@@ -74,12 +81,42 @@
         <fragment
                 android:id="@+id/navigation_timing"
                 android:name="com.example.timemanager.ui.home.timing.TimingFragment"
-                tools:layout="@layout/fragment_timing" />
+                tools:layout="@layout/fragment_timing" >
+            <action
+                android:id="@+id/action_navigation_timing_to_navigation_count_down"
+                app:destination="@id/navigation_count_down"
+                app:enterAnim="@anim/fade_in"
+                app:exitAnim="@anim/fade_out"
+                app:popEnterAnim="@anim/fade_in"
+                app:popExitAnim="@anim/fade_out" />
+            <action
+                    android:id="@+id/action_navigation_timing_to_navigation_todo"
+                    app:destination="@id/navigation_todo"
+                    app:enterAnim="@anim/fade_in"
+                    app:exitAnim="@anim/fade_out"
+                    app:popEnterAnim="@anim/fade_in"
+                    app:popExitAnim="@anim/fade_out" />
+        </fragment>
 
         <fragment
                 android:id="@+id/navigation_count_down"
                 android:name="com.example.timemanager.ui.home.timing.CountDownFragment"
-                tools:layout="@layout/fragment_count_down" />
+                tools:layout="@layout/fragment_count_down">
+            <action
+                    android:id="@+id/action_navigation_count_down_to_navigation_timing"
+                    app:destination="@id/navigation_timing"
+                    app:enterAnim="@anim/fade_in"
+                    app:exitAnim="@anim/fade_out"
+                    app:popEnterAnim="@anim/fade_in"
+                    app:popExitAnim="@anim/fade_out" />
+            <action
+                    android:id="@+id/action_navigation_count_down_to_navigation_todo"
+                    app:destination="@id/navigation_todo"
+                    app:enterAnim="@anim/fade_in"
+                    app:exitAnim="@anim/fade_out"
+                    app:popEnterAnim="@anim/fade_in"
+                    app:popExitAnim="@anim/fade_out" />
+        </fragment>
 
     </navigation>
 

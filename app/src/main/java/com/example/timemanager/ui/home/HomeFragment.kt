@@ -23,8 +23,6 @@ import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.repository.UserPreferencesRepository
 import com.example.timemanager.ui.SwipeController
 import com.example.timemanager.ui.home.adapter.TasksAdapter
-import com.example.timemanager.ui.home.utils.Constants
-import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -119,9 +117,8 @@ class HomeFragment : Fragment() {
             }
 
             override fun onTaskTimingClick(task: Task) {
-                findNavController().navigate(R.id.navigation_timing, Bundle().apply {
-                    putString(Constants.TASK_NAME, task.name)
-                })
+                findNavController().navigate(R.id.action_navigation_todo_to_navigation_timing)
+                viewModel.setTimingTaskName(task.name)
             }
         }
     }

@@ -118,6 +118,13 @@ class HomeViewModel @Inject constructor(
         editSheetId.value = value
     }
 
+    //正在计时的taskName
+    private var timingTaskName = MutableLiveData<String>()
+    fun getTimingTaskName() = timingTaskName.value
+    fun setTimingTaskName(value: String) {
+        timingTaskName.value = value
+    }
+
     // 添加和编辑页面复用
     private var isEdit = MutableLiveData(false)
     fun isEdit() = isEdit.value ?: false

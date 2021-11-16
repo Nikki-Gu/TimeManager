@@ -10,12 +10,22 @@ import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
+import android.view.KeyEvent
 import androidx.core.view.isVisible
-import com.example.timemanager.ui.home.utils.Constants
+import androidx.navigation.navGraphViewModels
+import com.example.timemanager.db.dao.SheetDao
+import com.example.timemanager.db.dao.TaskDao
+import com.example.timemanager.di.RepositoryModule
+import com.example.timemanager.repository.UserPreferencesRepository
+import com.example.timemanager.ui.home.HomeViewModel
+import com.example.timemanager.ui.home.HomeViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 /**
  * A [Fragment] to timing.
  */
+@AndroidEntryPoint
 class TimingFragment : Fragment(){
     private var _binding: FragmentTimingBinding? = null
     private val binding get() = _binding!!
@@ -23,21 +33,55 @@ class TimingFragment : Fragment(){
     private val handler = Handler()
     private var mCountNum = 0
     private var running = false //计时状态
-    private var taskName: String? = null
+
+    @Inject
+    lateinit var taskDao: TaskDao
+
+    @Inject
+    lateinit var sheetDao: SheetDao
+
+    @Inject
+    lateinit var userPreferencesRepository: UserPreferencesRepository
+
+    private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
+        HomeViewModelFactory(
+            taskRepository = RepositoryModule.provideTaskRepository(taskDao),
+            sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            userPreferencesRepository = userPreferencesRepository
+        )
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        super.onCreateView(inflater, container, savedInstanceState)
         _binding = FragmentTimingBinding.inflate(inflater, container, false)
-        taskName = arguments?.getString(Constants.TASK_NAME)
-        initTimer()
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initToolbar()
+        initTimer()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireView().isFocusableInTouchMode = true
+        requireView().requestFocus()
+        requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
+            //判断用户点击了手机自带的返回键
+            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
+                findNavController().navigate(R.id.action_navigation_timing_to_navigation_todo)
+                return@setOnKeyListener true
+            }
+            false
+        }
+    }
+
+    private fun initToolbar() {
         NavigationUI.setupWithNavController(binding.timingToolbar, findNavController())
         binding.timingToolbar.apply {
             title = "正计时"
@@ -48,9 +92,7 @@ class TimingFragment : Fragment(){
                         true
                     }
                     R.id.count_down -> {
-                        findNavController().navigate(R.id.navigation_count_down, Bundle().apply {
-                            putString(Constants.TASK_NAME, taskName)
-                        })
+                        findNavController().navigate(R.id.action_navigation_timing_to_navigation_count_down)
                         true
                     }
                     else -> false
@@ -58,14 +100,13 @@ class TimingFragment : Fragment(){
             }
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                // TODO sheetID
-                findNavController().navigate(R.id.navigation_todo)
+                findNavController().navigate(R.id.action_navigation_timing_to_navigation_todo)
             }
         }
     }
 
     private fun initTimer() {
-        binding.taskName.text = taskName
+        binding.taskName.text = viewModel.getTimingTaskName()
         binding.timingButton.text = "开始专注"
         binding.finishButton.text = "完成专注"
         binding.finishButton.isVisible = false
@@ -90,18 +131,12 @@ class TimingFragment : Fragment(){
             binding.timingButton.text = "开始专注"
             binding.finishButton.isVisible = false
             mCountNum = 0
-            binding.timeView.text = "00:00:00"
+            binding.timeView.text = getString(R.string.initial_time)
             running = false
             binding.timeView.isEnabled = true
             handler.removeCallbacks(countUp)
             //TODO: 数据库操作
         }
-
-//        binding.reset.setOnClickListener {
-//            running = false
-//            binding.timeView.isEnabled = true
-//            mCountNum = 0
-//        }
     }
 
     private val countUp = object : Runnable {
