@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="rank">
-        <item>紧急重要</item>
-        <item>重要而不紧急</item>
-        <item>紧急而不重要</item>
-        <item>不紧急不重要</item>
-    </string-array>
-</resources>
