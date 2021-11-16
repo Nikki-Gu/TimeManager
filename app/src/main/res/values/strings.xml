@@ -12,7 +12,6 @@
     <string name="edit_sheet">编辑清单</string>
     <string name="no_tasks">清单空空如也，点击加号添加待办</string>
     <string name="task_enter_name">标题</string>
-    <string name="task_tag">属性</string>
     <string name="task_description">描述</string>
     <string name="must_be_not_empty">待办名称不能为空</string>
     <string name="sheet_enter_name">清单名称</string>
@@ -21,6 +20,11 @@
     <string name="initial_time">00:00:00</string>
     <string name="colon">:</string>
     <string name="zero">00</string>
+    <string name="rank0">A：紧急重要</string>
+    <string name="rank1">B：重要而不紧急</string>
+    <string name="rank2">C：紧急而不重要</string>
+    <string name="rank3">D：不紧急不重要</string>
+    <string name="hint_of_rank">优先级</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="delete_task_button">delete_task_button</string>

@@ -4,23 +4,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
-import com.example.timemanager.R
 import com.example.timemanager.databinding.AddTaskFragmentBinding
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.extensions.hideSoftKeyboard
 import com.example.timemanager.repository.UserPreferencesRepository
-import com.example.timemanager.ui.home.adapter.CustomizedSpinnerAdapter
 import dagger.hilt.android.AndroidEntryPoint
-import java.util.*
 import javax.inject.Inject
 
+import android.widget.ArrayAdapter
+import com.example.timemanager.R
 
 
 /**
@@ -39,9 +37,6 @@ class AddTaskFragment : Fragment() {
 
     @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
-
-    var spinner_priority: Spinner? = null
-    var priority: List<String> = ArrayList()
 
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
         HomeViewModelFactory(
@@ -68,14 +63,16 @@ class AddTaskFragment : Fragment() {
 
     private fun initView() {
         initToolBar()
+        initSpinner()
         viewModel.apply {
-            if(isEdit()) {
+            if (isEdit()) {
                 getEditTaskId()?.let {
                     getTask(it).observe(
                         viewLifecycleOwner,
                         { task ->
                             binding.taskNameEditText.setText(task?.name)
-                            binding.taskNameEditText.setText(task?.name)
+                            binding.rank.setSelection(task?.rank ?: 4)
+                            binding.taskDescriptionEditText.setText(task?.description)
                         }
                     )
                 }
@@ -92,8 +89,6 @@ class AddTaskFragment : Fragment() {
                 getString(R.string.list_add_item)
             }
             inflateMenu(R.menu.add_task_menu)
-            spinner_priority = findViewById(R.id.spinner_priority)
-            spinner()
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.save_task -> {
@@ -114,13 +109,40 @@ class AddTaskFragment : Fragment() {
         }
     }
 
+    private fun initSpinner() {
+        val adapter: ArrayAdapter<String> =
+            object : ArrayAdapter<String>(requireContext(), R.layout.spinner_optional_item) {
+                override fun getCount(): Int {
+                    return super.getCount() - 1
+                }
+            }
+        adapter.apply {
+            add(getString(R.string.rank0))
+            add(getString(R.string.rank1))
+            add(getString(R.string.rank2))
+            add(getString(R.string.rank3))
+            add(getString(R.string.hint_of_rank))
+        }
+        binding.rank.adapter = adapter
+        // 设置默认选中最后一项
+        binding.rank.setSelection(adapter.count, true)
+    }
+
     private fun insertTask() {
         if (!validateTaskName()) {
             return
         }
+        R.layout.support_simple_spinner_dropdown_item
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
-        viewModel.insertTask(name, description).observe(viewLifecycleOwner) {}
+        val rank = when (binding.rank.selectedItem.toString()) {
+            getString(R.string.rank0) -> 0
+            getString(R.string.rank1) -> 1
+            getString(R.string.rank2) -> 2
+            getString(R.string.rank3) -> 3
+            else -> 4
+        }
+        viewModel.insertTask(name, description, rank).observe(viewLifecycleOwner) {}
         activity?.hideSoftKeyboard()
         findNavController().navigateUp()
     }
@@ -131,9 +153,16 @@ class AddTaskFragment : Fragment() {
         }
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
+        val rank = when (binding.rank.selectedItem.toString()) {
+            getString(R.string.rank0) -> 0
+            getString(R.string.rank1) -> 1
+            getString(R.string.rank2) -> 2
+            getString(R.string.rank3) -> 3
+            else -> 4
+        }
         activity?.hideSoftKeyboard()
         viewModel.getEditTaskId()?.let { taskId ->
-            viewModel.updateTask(taskId, name, description)
+            viewModel.updateTask(taskId, name, description, rank)
         }
         findNavController().navigateUp()
     }
@@ -143,18 +172,6 @@ class AddTaskFragment : Fragment() {
             binding.taskNameInput.error = getString(R.string.must_be_not_empty)
             false
         } else true
-    }
-
-    private fun spinner() {
-        priority+="紧急重要"
-        priority+="重要而不紧急"
-        priority+="紧急而不重要"
-        priority+="不紧急不重要"
-        priority+="请选择优先级"
-        val spinneradapter = CustomizedSpinnerAdapter(this.context, R.layout.support_simple_spinner_dropdown_item, priority)
-        spinner_priority!!.adapter = spinneradapter
-        //默认选中最后一项
-        spinner_priority!!.setSelection(priority.size - 1, true)
     }
 
     override fun onDestroyView() {
