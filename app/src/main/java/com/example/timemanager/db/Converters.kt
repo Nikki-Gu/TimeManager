@@ -18,6 +18,8 @@ package com.example.timemanager.db
 import androidx.room.TypeConverter
 import com.example.timemanager.db.model.Tag
 import com.example.timemanager.db.model.TaskState
+import java.util.*
+
 
 // NOTE: each conversion must have two functions to convert A to B and B to A
 // i.e. Tag to String and String to Tag
@@ -34,4 +36,13 @@ class Converters {
     @TypeConverter
     fun toTaskState(name: String?): TaskState =
         name?.let { enumValueOf<TaskState>(it) } ?: TaskState.DOING
+
+    @TypeConverter
+    fun toDate(value: Long): Date {
+        return Date(value);
+    }
+    @TypeConverter
+    fun fromDate(value: Date): Long {
+        return value.time;
+    }
 }
