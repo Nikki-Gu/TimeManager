@@ -13,7 +13,7 @@ import java.util.*
 interface TaskDao {
 
     @Query("SELECT * FROM task WHERE startDate= :date and endDate= :date")
-    fun getAllbyDate(date: Date)
+    fun getAllByDate(date: Date): List<TaskEntity>
 
     @Query("DELETE FROM task WHERE id = :id")
     suspend fun deleteTask(id: Int)

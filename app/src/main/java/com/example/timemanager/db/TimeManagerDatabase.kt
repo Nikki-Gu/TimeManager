@@ -26,14 +26,14 @@ abstract class TimeManagerDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDao
 
-    abstract fun userDao():UserDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
-        private var INSTANCE: TimeManagerDatabase?= null
+        private var INSTANCE: TimeManagerDatabase? = null
         fun getInstance(context: Context): TimeManagerDatabase =
-            INSTANCE?: synchronized(this){
-                INSTANCE?: buildDatabase(context).also {
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: buildDatabase(context).also {
                     INSTANCE = it
                 }
             }

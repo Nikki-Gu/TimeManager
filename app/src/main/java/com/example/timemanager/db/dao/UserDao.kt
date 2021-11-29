@@ -19,16 +19,16 @@ interface UserDao {
     fun getUser(id: Int): Flow<UserEntity>
 
     @Query("SELECT timesFocus FROM user WHERE id = :id and date = :date")
-    fun getTimesbyDate(id: Int, date: Date): Int
+    fun getTimesByDate(id: Int, date: Date): Int
 
     @Query("SELECT timesFocus FROM user WHERE id = :id and (date between :date1 and :date2)")
-    fun getTimesBetweenDate(id: Int, date1: Date,date2:Date): Int
+    fun getTimesBetweenDate(id: Int, date1: Date, date2: Date): Int
 
     @Query("SELECT totalDuration FROM user WHERE id = :id and date = :date")
-    fun getDurationbyDate(id: Int, date: Date): Long
+    fun getDurationByDate(id: Int, date: Date): Long
 
     @Query("SELECT totalDuration FROM user WHERE id = :id and (date between :date1 and :date2)")
-    fun getDurationBetweenDate(id: Int, date1: Date,date2:Date): Long
+    fun getDurationBetweenDate(id: Int, date1: Date, date2: Date): Long
 
     @Query("SELECT * FROM user ORDER BY id ASC")
     fun getUsers(): Flow<List<UserEntity>>
