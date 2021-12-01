@@ -8,11 +8,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
-import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
-import android.view.KeyEvent
 import androidx.core.view.isVisible
 import androidx.navigation.navGraphViewModels
+import com.example.timemanager.databinding.FragmentCountDownBinding
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.di.RepositoryModule
@@ -21,13 +20,14 @@ import com.example.timemanager.ui.home.HomeViewModel
 import com.example.timemanager.ui.home.HomeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import android.view.KeyEvent
 
 /**
- * A [Fragment] to timing.
+ * A [Fragment] to count down.
  */
 @AndroidEntryPoint
-class TimingFragment : Fragment(){
-    private var _binding: FragmentTimingBinding? = null
+class CountDownFragment : Fragment(){
+    private var _binding: FragmentCountDownBinding? = null
     private val binding get() = _binding!!
 
     private val handler = Handler()
@@ -57,7 +57,7 @@ class TimingFragment : Fragment(){
         savedInstanceState: Bundle?
     ): View {
         super.onCreateView(inflater, container, savedInstanceState)
-        _binding = FragmentTimingBinding.inflate(inflater, container, false)
+        _binding = FragmentCountDownBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -69,12 +69,12 @@ class TimingFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        requireView().isFocusableInTouchMode = true
+        requireView().setFocusableInTouchMode(true)
         requireView().requestFocus()
         requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
             //判断用户点击了手机自带的返回键
             if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                findNavController().navigate(R.id.action_navigation_timing_to_navigation_todo)
+                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
                 return@setOnKeyListener true
             }
             false
@@ -82,17 +82,17 @@ class TimingFragment : Fragment(){
     }
 
     private fun initToolbar() {
-        NavigationUI.setupWithNavController(binding.timingToolbar, findNavController())
-        binding.timingToolbar.apply {
-            title = "正计时"
+        NavigationUI.setupWithNavController(binding.countDownToolbar, findNavController())
+        binding.countDownToolbar.apply {
+            title = "倒计时"
             inflateMenu(R.menu.timing_menu)
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
+                        findNavController().navigateUp()
                         true
                     }
                     R.id.count_down -> {
-                        findNavController().navigate(R.id.action_navigation_timing_to_navigation_count_down)
                         true
                     }
                     else -> false
@@ -100,7 +100,7 @@ class TimingFragment : Fragment(){
             }
             setNavigationIcon(R.drawable.ic_back)
             setNavigationOnClickListener {
-                findNavController().navigate(R.id.action_navigation_timing_to_navigation_todo)
+                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
             }
         }
     }
@@ -115,15 +115,24 @@ class TimingFragment : Fragment(){
             if (running) {
                 binding.timingButton.text = "继续专注"
                 running = false
-                binding.timeView.isEnabled = true
-                handler.removeCallbacks(countUp)
+                binding.edHour.isEnabled = true
+                binding.edMin.isEnabled = true
+                binding.edSecond.isEnabled = true
+                handler.removeCallbacks(countDown)
             }
             else {
                 binding.timingButton.text = "暂停专注"
                 binding.finishButton.isVisible = true
                 running = true
-                binding.timeView.isEnabled = false
-                handler.postDelayed(countUp, 0)
+                binding.edHour.isEnabled = false
+                binding.edMin.isEnabled = false
+                binding.edSecond.isEnabled = false
+
+                val hour: Int = Integer.valueOf(binding.edHour.text.toString())
+                val minute: Int = Integer.valueOf(binding.edMin.text.toString())
+                val seconds: Int = Integer.valueOf(binding.edSecond.text.toString())
+                mCountNum = hour * 3600 + minute * 60 + seconds
+                handler.postDelayed(countDown, 0)
             }
         }
 
@@ -131,30 +140,43 @@ class TimingFragment : Fragment(){
             binding.timingButton.text = "开始专注"
             binding.finishButton.isVisible = false
             mCountNum = 0
-            binding.timeView.text = getString(R.string.initial_time)
+            binding.edHour.setText(getString(R.string.zero))
+            binding.edMin.setText(getString(R.string.zero))
+            binding.edSecond.setText(getString(R.string.zero))
             running = false
-            binding.timeView.isEnabled = true
-            handler.removeCallbacks(countUp)
+            binding.edHour.isEnabled = true
+            binding.edMin.isEnabled = true
+            binding.edSecond.isEnabled = true
+            handler.removeCallbacks(countDown)
             //TODO: 数据库操作
         }
     }
 
-    private val countUp = object : Runnable {
+    private val countDown = object : Runnable {
         override fun run() {
-            if (running) {
-                mCountNum++
+            binding.edHour.setText(String.format("%02d", mCountNum / 3600 % 24))
+            binding.edMin.setText(String.format("%02d", mCountNum % 3600 / 60))
+            binding.edSecond.setText(String.format("%02d", mCountNum % 60))
+
+            if (mCountNum > 0) {
+                handler.postDelayed(this, 1000)
+                if (running) {
+                    mCountNum--
+                }
+            } else {
+                binding.timingButton.text = "开始专注"
+                binding.finishButton.isVisible = false
+                binding.edHour.isEnabled = true
+                binding.edMin.isEnabled = true
+                binding.edSecond.isEnabled = true
+                running = false
             }
-            val hour: Int = mCountNum / 3600 % 24
-            val minute: Int = mCountNum % 3600 / 60
-            val time = String.format("%02d:%02d:%02d", hour, minute, mCountNum % 60)
-            binding.timeView.text = time
-            handler.postDelayed(this, 1000)
         }
     }
 
     override fun onDestroyView() {
         _binding = null
-        handler.removeCallbacks(countUp)
+        handler.removeCallbacks(countDown)
         super.onDestroyView()
     }
 }

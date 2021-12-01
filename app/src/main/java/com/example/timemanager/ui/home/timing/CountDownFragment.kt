@@ -69,7 +69,7 @@ class CountDownFragment : Fragment(){
 
     override fun onResume() {
         super.onResume()
-        requireView().isFocusableInTouchMode = true
+        requireView().setFocusableInTouchMode(true)
         requireView().requestFocus()
         requireView().setOnKeyListener { v: View?, keyCode: Int, event: KeyEvent ->
             //判断用户点击了手机自带的返回键
@@ -89,7 +89,7 @@ class CountDownFragment : Fragment(){
             setOnMenuItemClickListener { item ->
                 when (item.itemId) {
                     R.id.count_up -> {
-                        findNavController().navigate(R.id.action_navigation_count_down_to_navigation_timing)
+                        findNavController().navigateUp()
                         true
                     }
                     R.id.count_down -> {
@@ -134,7 +134,6 @@ class CountDownFragment : Fragment(){
                 mCountNum = hour * 3600 + minute * 60 + seconds
                 handler.postDelayed(countDown, 0)
             }
-            onResume()
         }
 
         binding.finishButton.setOnClickListener {
@@ -149,35 +148,7 @@ class CountDownFragment : Fragment(){
             binding.edMin.isEnabled = true
             binding.edSecond.isEnabled = true
             handler.removeCallbacks(countDown)
-            onResume()
             //TODO: 数据库操作
-        }
-
-        binding.edSecond.setOnKeyListener{ v: View?, keyCode: Int, event: KeyEvent ->
-            //判断用户点击了手机自带的返回键
-            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
-                return@setOnKeyListener true
-            }
-            false
-        }
-
-        binding.edMin.setOnKeyListener{ v: View?, keyCode: Int, event: KeyEvent ->
-            //判断用户点击了手机自带的返回键
-            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
-                return@setOnKeyListener true
-            }
-            false
-        }
-
-        binding.edHour.setOnKeyListener{ v: View?, keyCode: Int, event: KeyEvent ->
-            //判断用户点击了手机自带的返回键
-            if (event.action == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK) {
-                findNavController().navigate(R.id.action_navigation_count_down_to_navigation_todo)
-                return@setOnKeyListener true
-            }
-            false
         }
     }
 

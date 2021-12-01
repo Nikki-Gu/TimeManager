@@ -1,78 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".ui.home.timing.TimingFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.home.timing.TimingFragment">
 
     <com.google.android.material.appbar.AppBarLayout
-            style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:elevation="0dp">
+        style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
-                android:id="@+id/timing_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:layout_gravity="center"
-                android:background="@color/white"
-                app:titleTextColor="@color/dim_grey"
-                app:popupTheme="@style/ToolbarPopupTheme"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+            android:id="@+id/timing_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="center"
+            android:background="@color/white"
+            app:titleTextColor="@color/dim_grey"
+            app:popupTheme="@style/ToolbarPopupTheme"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/taskName"
+                android:textSize="30sp"
+                android:textColor="@color/black"
                 android:gravity="center"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="0dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
-                    android:id="@+id/taskName"
-                    android:textSize="30sp"
-                    android:textColor="@color/black"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:id="@+id/nullString_1"
+                android:text=""
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
-                    android:id="@+id/nullString_1"
-                    android:text=""
-                    android:textSize="30sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:id="@+id/timeView"
+                android:text="@string/initial_time"
+                android:textSize="60sp"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <TextView
-                    android:id="@+id/timeView"
-                    android:text="@string/initial_time"
-                    android:textSize="60sp"
-                    android:gravity="center"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            <TextView
-                    android:id="@+id/nullString_2"
-                    android:text=""
-                    android:textSize="30sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                android:id="@+id/nullString_2"
+                android:text=""
+                android:textSize="30sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <Button
-                    android:id="@+id/timing_button"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:id="@+id/timing_button"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <Button
-                    android:id="@+id/finish_button"
-                    android:gravity="center"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                android:id="@+id/finish_button"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
     </com.google.android.material.appbar.AppBarLayout>

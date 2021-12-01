@@ -7,9 +7,13 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.timemanager.db.entity.TaskEntity
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 @Dao
 interface TaskDao {
+
+    @Query("SELECT * FROM task WHERE startDate= :date and endDate= :date")
+    fun getAllByDate(date: Date): List<TaskEntity>
 
     @Query("DELETE FROM task WHERE id = :id")
     suspend fun deleteTask(id: Int)
