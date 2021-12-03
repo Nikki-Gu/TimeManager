@@ -6,6 +6,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverters
 import com.example.timemanager.db.Converters
+import java.util.*
 
 @TypeConverters(Converters::class)
 @Entity(
@@ -24,5 +25,7 @@ data class RecordEntity(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "task_id") var taskid: Int,
     var duration: Long?,
-    var isInterrupt: Boolean
+    var isInterrupt: Boolean,
+    var date: Date?
+
 )
