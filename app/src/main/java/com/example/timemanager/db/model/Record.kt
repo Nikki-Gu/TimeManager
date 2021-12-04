@@ -1,21 +1,21 @@
 package com.example.timemanager.db.model
 
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import java.util.*
 
 data class Record (
     val id: Int,
-    val taskid: Int,
+    val taskId: Int,
+    val taskName: String,
     var duration: Long?,
     var isInterrupt: Boolean,
     var date: Date?
 )
 
-fun createRecord(id: Int, taskid: Int, duration: Long?, isInterrupt: Boolean, date: Date? = null) =
+fun createRecord(id: Int, taskId: Int, taskName: String, duration: Long?, isInterrupt: Boolean, date: Date? = null) =
     Record(
         id = id,
-        taskid = taskid,
+        taskId = taskId,
+        taskName = taskName,
         duration = duration,
         isInterrupt = isInterrupt,
         date = date

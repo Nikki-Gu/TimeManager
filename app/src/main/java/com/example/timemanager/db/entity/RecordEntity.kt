@@ -24,8 +24,8 @@ import java.util.*
 data class RecordEntity(
     @PrimaryKey(autoGenerate = true) var id: Int = 0,
     @ColumnInfo(name = "task_id") var taskid: Int,
+    var taskName: String,
     var duration: Long?,
     var isInterrupt: Boolean,
     var date: Date?
-
 )

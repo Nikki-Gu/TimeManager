@@ -12,6 +12,7 @@ import com.example.timemanager.databinding.FragmentTimingBinding
 import android.os.Handler
 import androidx.core.view.isVisible
 import androidx.navigation.navGraphViewModels
+import com.example.timemanager.db.dao.RecordDao
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.di.RepositoryModule
@@ -40,12 +41,16 @@ class TimingFragment : Fragment(){
     lateinit var sheetDao: SheetDao
 
     @Inject
+    lateinit var recordDao: RecordDao
+
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
         HomeViewModelFactory(
             taskRepository = RepositoryModule.provideTaskRepository(taskDao),
             sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            recordRepository = RepositoryModule.provideRecordRepository(recordDao),
             userPreferencesRepository = userPreferencesRepository
         )
     }

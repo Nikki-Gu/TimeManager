@@ -19,6 +19,7 @@ import javax.inject.Inject
 
 import android.widget.ArrayAdapter
 import com.example.timemanager.R
+import com.example.timemanager.db.dao.RecordDao
 
 
 /**
@@ -36,12 +37,16 @@ class AddTaskFragment : Fragment() {
     lateinit var sheetDao: SheetDao
 
     @Inject
+    lateinit var recordDao: RecordDao
+
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
         HomeViewModelFactory(
             taskRepository = RepositoryModule.provideTaskRepository(taskDao),
             sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            recordRepository = RepositoryModule.provideRecordRepository(recordDao),
             userPreferencesRepository = userPreferencesRepository
         )
     }

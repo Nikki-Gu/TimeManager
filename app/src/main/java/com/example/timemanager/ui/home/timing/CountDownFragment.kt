@@ -21,6 +21,7 @@ import com.example.timemanager.ui.home.HomeViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import android.view.KeyEvent
+import com.example.timemanager.db.dao.RecordDao
 
 /**
  * A [Fragment] to count down.
@@ -41,12 +42,16 @@ class CountDownFragment : Fragment(){
     lateinit var sheetDao: SheetDao
 
     @Inject
+    lateinit var recordDao: RecordDao
+
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private val viewModel: HomeViewModel by navGraphViewModels(R.id.home_navigation) {
         HomeViewModelFactory(
             taskRepository = RepositoryModule.provideTaskRepository(taskDao),
             sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            recordRepository = RepositoryModule.provideRecordRepository(recordDao),
             userPreferencesRepository = userPreferencesRepository
         )
     }

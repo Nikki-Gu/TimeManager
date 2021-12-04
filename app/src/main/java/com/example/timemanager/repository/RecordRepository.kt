@@ -9,27 +9,27 @@ import kotlinx.coroutines.flow.map
 import java.util.*
 
 
-val dateToday: Date = Calendar.getInstance().time;
+val dateToday: Date = Calendar.getInstance().time
 
 val dateStart: Date = Date(1990, 1, 1)
 
 class RecordRepository(private val recordDao: RecordDao) {
-    fun deleteRecord(id : Int) = recordDao.deleteRecord(id)
+    fun deleteRecord(id: Int) = recordDao.deleteRecord(id)
 
-    fun getTimesByDate(date: Date): Int = recordDao.getTimesByDate(date)
+    fun getTimesByDate(date: Date) = recordDao.getTimesByDate(date)
 
-    fun getTimesTillNow(): Int = recordDao.getTimesBetweenDate(dateStart, dateToday)
+    fun getTimesTillNow() = recordDao.getTimesBetweenDate(dateStart, dateToday)
 
-    fun getDurationByDate(date: Date): Long = recordDao.getDurationByDate(date)
+    fun getDurationByDate(date: Date) = recordDao.getDurationByDate(date)
 
-    fun getDurationTillNow(): Long = recordDao.getDurationBetweenDate(dateStart, dateToday)
+    fun getDurationTillNow() = recordDao.getDurationBetweenDate(dateStart, dateToday)
 
-    fun getRecordById(id: Int) = recordDao.getRecordById(id).map{ it.toDomain() }
+    fun getRecordByDate(date: Date) = recordDao.getRecordByDate(date).map { it.toDomain() }
 
-    fun getAllRecord() = recordDao.getAllRecord().map{ it.toDomain() }
+    fun getRecordById(id: Int) = recordDao.getRecordById(id).map { it.toDomain() }
+
+    fun getAllRecord() = recordDao.getAllRecord().map { it.toDomain() }
 
     fun insertRecord(record: Record) = record.toEntity()?.let { recordDao.insertRecord(it) }
-
-
 
 }

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.MenuSheetFragmentBinding
+import com.example.timemanager.db.dao.RecordDao
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.Sheet
@@ -33,6 +34,9 @@ class MenuSheetFragment : Fragment() {
     lateinit var sheetDao: SheetDao
 
     @Inject
+    lateinit var recordDao: RecordDao
+
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private var _binding: MenuSheetFragmentBinding? = null
@@ -42,6 +46,7 @@ class MenuSheetFragment : Fragment() {
         HomeViewModelFactory(
             taskRepository = RepositoryModule.provideTaskRepository(taskDao),
             sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            recordRepository = RepositoryModule.provideRecordRepository(recordDao),
             userPreferencesRepository = userPreferencesRepository
         )
     }
