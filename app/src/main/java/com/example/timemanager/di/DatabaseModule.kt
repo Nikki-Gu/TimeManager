@@ -24,4 +24,7 @@ object DatabaseModule {
 
     @Provides
     fun provideTaskDao(timeManagerDatabase: TimeManagerDatabase) = timeManagerDatabase.taskDao()
+
+    @Provides
+    fun provideRecordDao(timeManagerDatabase: TimeManagerDatabase) = timeManagerDatabase.recordDao()
 }

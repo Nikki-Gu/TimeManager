@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
+import com.example.timemanager.db.model.Record
 import com.example.timemanager.db.model.Sheet
 import com.example.timemanager.db.model.Task
 import com.example.timemanager.db.model.createTask
 import com.example.timemanager.db.model.createUpdateTask
+import com.example.timemanager.repository.RecordRepository
 import com.example.timemanager.repository.SheetRepository
 import com.example.timemanager.repository.TaskRepository
 import com.example.timemanager.repository.UserPreferencesRepository
@@ -23,6 +25,7 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val sheetRepository: SheetRepository,
+    private val recordRepository: RecordRepository,
     private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModel() {
 
@@ -131,4 +134,15 @@ class HomeViewModel @Inject constructor(
     fun setEdit(value: Boolean) {
         isEdit.value = value
     }
+
+    fun deleteRecord(id: Int) = viewModelScope.launch {
+        recordRepository.deleteRecord(id)
+    }
+
+    fun getRecordById(id: Int): LiveData<Record?> = recordRepository.getRecordById(id).asLiveData()
+
+    val allRecord: LiveData<Record?> = recordRepository.getAllRecord().asLiveData()
+
+    fun insertRecord(record: Record) = recordRepository.insertRecord(record)
+
 }

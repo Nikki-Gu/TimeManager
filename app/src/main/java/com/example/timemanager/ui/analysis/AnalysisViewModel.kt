@@ -3,11 +3,35 @@ package com.example.timemanager.ui.analysis
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
+import com.example.timemanager.db.model.Record
+import com.example.timemanager.db.model.Sheet
+import com.example.timemanager.db.model.Task
+import com.example.timemanager.repository.RecordRepository
+import com.example.timemanager.repository.SheetRepository
+import com.example.timemanager.repository.TaskRepository
+import com.example.timemanager.repository.UserPreferencesRepository
+import com.example.timemanager.repository.dateStart
+import com.example.timemanager.repository.dateToday
+import com.example.timemanager.repository.mapper.RecordMapper.toDomain
+import com.example.timemanager.repository.mapper.RecordMapper.toEntity
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
+import java.util.*
+import javax.inject.Inject
 
-class AnalysisViewModel : ViewModel() {
+@HiltViewModel
+class AnalysisViewModel @Inject constructor(
+    private val recordRepository: RecordRepository
+): ViewModel() {
 
-    private val _text = MutableLiveData<String>().apply {
-        value = "This is analysis Fragment"
-    }
-    val text: LiveData<String> = _text
+    fun timesOfDate(date: Date): LiveData<Int> = recordRepository.getTimesByDate(date).asLiveData()
+
+    val timesTillNow: LiveData<Int> = recordRepository.getTimesTillNow().asLiveData()
+
+    fun durationOfDate(date: Date): LiveData<Long> = recordRepository.getDurationByDate(date).asLiveData()
+
+    val durationTillNow: LiveData<Long> = recordRepository.getDurationTillNow().asLiveData()
+
+    fun recordOfDate(date: Date): LiveData<Record?> = recordRepository.getRecordByDate(date).asLiveData()
 }

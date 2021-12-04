@@ -10,6 +10,7 @@ import androidx.navigation.navGraphViewModels
 import androidx.navigation.ui.NavigationUI
 import com.example.timemanager.R
 import com.example.timemanager.databinding.AddSheetFragmentBinding
+import com.example.timemanager.db.dao.RecordDao
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.createSheet
@@ -34,6 +35,9 @@ class AddSheetFragment : Fragment() {
     lateinit var sheetDao: SheetDao
 
     @Inject
+    lateinit var recordDao: RecordDao
+
+    @Inject
     lateinit var userPreferencesRepository: UserPreferencesRepository
 
     private var _binding: AddSheetFragmentBinding? = null
@@ -43,6 +47,7 @@ class AddSheetFragment : Fragment() {
         HomeViewModelFactory(
             taskRepository = RepositoryModule.provideTaskRepository(taskDao),
             sheetRepository = RepositoryModule.provideSheetRepository(sheetDao),
+            recordRepository = RepositoryModule.provideRecordRepository(recordDao),
             userPreferencesRepository = userPreferencesRepository
         )
     }

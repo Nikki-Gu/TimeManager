@@ -7,6 +7,7 @@ import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
 import com.example.timemanager.db.model.Tag
 import com.example.timemanager.db.model.TaskState
+import java.util.*
 
 @Entity(
     tableName = "Task",
@@ -26,8 +27,8 @@ data class TaskEntity(
     var description: String?,
     var state: TaskState,
     @ColumnInfo(name = "sheet_id") var sheetId: Int,
-    var startDate: Long?,//时间类型暂时用long存储
-    var endDate: Long?,
+    var startDate: Date?,//时间类型暂时用long存储
+    var endDate: Date?,
     var rank: Int?,//等级，重要紧急
     var repeatTimes: Int = 1,//重复次数
     var frequency: String?,//任务频率

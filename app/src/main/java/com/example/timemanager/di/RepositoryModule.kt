@@ -16,24 +16,21 @@
 
 package com.example.timemanager.di
 
-import android.content.Context
+import com.example.timemanager.db.dao.RecordDao
 import com.example.timemanager.db.dao.SheetDao
 import com.example.timemanager.db.dao.TaskDao
+import com.example.timemanager.repository.RecordRepository
 import com.example.timemanager.repository.SheetRepository
 import com.example.timemanager.repository.TaskRepository
-import com.example.timemanager.repository.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-
-
 
     @Provides
     @Singleton
@@ -42,5 +39,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideSheetRepository(sheetDao: SheetDao) = SheetRepository(sheetDao)
+
+    @Provides
+    @Singleton
+    fun provideRecordRepository(recordDao: RecordDao) = RecordRepository(recordDao)
 
 }
