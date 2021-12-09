@@ -123,6 +123,7 @@ class HomeFragment : Fragment() {
 
             override fun onTaskTimingClick(task: Task) {
                 findNavController().navigate(R.id.action_navigation_todo_to_navigation_timing)
+                viewModel.setTimingTaskId(task.id)
                 viewModel.setTimingTaskName(task.name)
             }
         }

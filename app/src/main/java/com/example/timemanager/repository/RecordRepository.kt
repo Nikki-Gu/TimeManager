@@ -30,6 +30,6 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getAllRecord() = recordDao.getAllRecord().map { it.toDomain() }
 
-    fun insertRecord(record: Record) = record.toEntity()?.let { recordDao.insertRecord(it) }
+    suspend fun insertRecord(record: Record) = record.toEntity()?.let { recordDao.insertRecord(it) }
 
 }
