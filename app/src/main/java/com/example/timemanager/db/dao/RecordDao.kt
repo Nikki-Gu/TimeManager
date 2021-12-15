@@ -36,5 +36,5 @@ interface RecordDao {
     fun getAllRecord(): Flow<RecordEntity>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertRecord(record: RecordEntity): Long
+    suspend fun insertRecord(record: RecordEntity): Long
 }

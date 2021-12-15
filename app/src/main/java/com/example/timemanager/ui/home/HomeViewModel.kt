@@ -121,7 +121,12 @@ class HomeViewModel @Inject constructor(
         editSheetId.value = value
     }
 
-    //正在计时的taskName
+    //正在计时的taskId,taskName
+    private var timingTaskId = MutableLiveData<Int>()
+    fun getTimingTaskId() = timingTaskId.value
+    fun setTimingTaskId(value: Int) {
+        timingTaskId.value = value
+    }
     private var timingTaskName = MutableLiveData<String>()
     fun getTimingTaskName() = timingTaskName.value
     fun setTimingTaskName(value: String) {
@@ -143,6 +148,8 @@ class HomeViewModel @Inject constructor(
 
     val allRecord: LiveData<Record?> = recordRepository.getAllRecord().asLiveData()
 
-    fun insertRecord(record: Record) = recordRepository.insertRecord(record)
+    fun insertRecord(record: Record) = liveData {
+        emit(recordRepository.insertRecord(record))
+    }
 
 }
