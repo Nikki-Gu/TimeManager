@@ -18,7 +18,7 @@ import com.example.timemanager.db.dao.TaskDao
 import com.example.timemanager.db.model.Sheet
 import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.repository.UserPreferencesRepository
-import com.example.timemanager.ui.SwipeController
+import com.example.timemanager.ui.ItemTouchHelperCallback
 import com.example.timemanager.ui.home.HomeViewModel
 import com.example.timemanager.ui.home.HomeViewModelFactory
 import com.example.timemanager.ui.home.adapter.SheetsAdapter
@@ -138,8 +138,8 @@ class MenuSheetFragment : Fragment() {
     }
 
     private fun initDeleteSheetObserver() {
-        val swipeController = SwipeController(requireContext(), object :
-            SwipeController.SwipeControllerActions {
+        val swipeController = ItemTouchHelperCallback(requireContext(), object :
+            ItemTouchHelperCallback.ItemTouchHelperAdapter {
 
             override fun onDelete(position: Int) {
                 viewModel.sheets.observe(
@@ -158,6 +158,10 @@ class MenuSheetFragment : Fragment() {
                     Toast.makeText(requireContext(), "这是最后一个清单，不能删除哦！", Toast.LENGTH_LONG)
                         .show()
                 }
+            }
+
+            override fun onItemMove(fromPosition: Int, toPosition: Int) {
+                // donothing
             }
         })
         val itemTouchHelper = ItemTouchHelper(swipeController)

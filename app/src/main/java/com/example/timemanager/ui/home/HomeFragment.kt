@@ -22,7 +22,7 @@ import com.example.timemanager.db.model.Task
 import com.example.timemanager.db.model.TaskState
 import com.example.timemanager.di.RepositoryModule
 import com.example.timemanager.repository.UserPreferencesRepository
-import com.example.timemanager.ui.SwipeController
+import com.example.timemanager.ui.ItemTouchHelperCallback
 import com.example.timemanager.ui.home.adapter.TasksAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -141,7 +141,7 @@ class HomeFragment : Fragment() {
                     } else {
                         hideEmptyListIllustration()
                     }
-                    tasksAdapter.submitList(it)
+                    tasksAdapter.submitList(viewModel.sortByInfo(it))
                     setProgressValue(getTasksDoneProgress(it))
                     setProgressText(getProgressText(it))
                 }
@@ -191,14 +191,26 @@ class HomeFragment : Fragment() {
         } ?: "0/0"
 
     private fun setSwipeActions() {
-        val swipeController = SwipeController(
+        val swipeController = ItemTouchHelperCallback(
             requireContext(),
             object :
-                SwipeController.SwipeControllerActions {
+                ItemTouchHelperCallback.ItemTouchHelperAdapter {
                 override fun onDelete(position: Int) {
                     tasksAdapter.currentList[position]?.id?.let { taskId ->
                         viewModel.deleteTask(taskId)
                     }
+                }
+
+                override fun onItemMove(fromPosition: Int, toPosition: Int) {
+                    val list : MutableList<Task> = tasksAdapter.currentList.toMutableList()
+                    val prev = list[fromPosition]
+                    list.add(
+                        if(toPosition > fromPosition) toPosition + 1 else toPosition,
+                        prev
+                    )
+                    if(toPosition > fromPosition) list.removeAt(fromPosition) else list.removeAt(fromPosition + 1)
+                    viewModel.setSortInfo(list)
+                    tasksAdapter.submitList(list)
                 }
             }
         )

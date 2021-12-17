@@ -29,19 +29,18 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.ACTION_STATE_SWIPE
-import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.RecyclerView
 import com.example.timemanager.R
 
-class SwipeController(
+class ItemTouchHelperCallback(
     val context: Context,
-    private val swipeControllerActions: SwipeControllerActions
+    private val itemTouchHelperAdapter: ItemTouchHelperAdapter
 ) : ItemTouchHelper.Callback() {
     private var swipeBack = false
 
     private var clearPaint: Paint = Paint()
     private var background: PaintDrawable = PaintDrawable()
-    private var colorBackground = ContextCompat.getColor(context, R.color.colorError)
+    private var colorBackground = ContextCompat.getColor(context, R.color.red)
     private var deleteDrawable =
         ContextCompat.getDrawable(context, R.drawable.ic_delete_outline_24dp)
     private var intrinsicWidth: Int
@@ -56,13 +55,25 @@ class SwipeController(
     override fun getMovementFlags(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder
-    ): Int = makeMovementFlags(0, RIGHT)
+    ): Int {
+        val dragFlags = ItemTouchHelper.UP or ItemTouchHelper.DOWN
+        val swipeFlags = ItemTouchHelper.START
+        return makeMovementFlags(dragFlags, swipeFlags)
+    }
 
     override fun onMove(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         target: RecyclerView.ViewHolder
-    ): Boolean = false
+    ): Boolean {
+        itemTouchHelperAdapter.onItemMove(
+            viewHolder.adapterPosition,
+            target.adapterPosition
+        )
+        return true
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {}
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onChildDraw(
@@ -74,10 +85,11 @@ class SwipeController(
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        if (actionState == ACTION_STATE_SWIPE) {
-            setTouchListener(recyclerView, viewHolder, dX, dY)
-        }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+        if (actionState != ACTION_STATE_SWIPE) {
+            return
+        }
+        setTouchListener(recyclerView, viewHolder, dX)
 
         val itemView = viewHolder.itemView
         val itemHeight = itemView.height
@@ -86,12 +98,11 @@ class SwipeController(
         if (isCancelled) {
             clearCanvas(
                 c,
-                itemView.left.toFloat(),
+                itemView.right.toFloat() + dX.toInt(),
                 itemView.top.toFloat(),
-                itemView.left.toFloat() + dX.toInt(),
+                itemView.right.toFloat(),
                 itemView.bottom.toFloat()
             )
-            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
             return
         }
 
@@ -99,9 +110,9 @@ class SwipeController(
         val cardMargin = context.resources.getDimension(R.dimen.card_margin).toInt()
         val cardCornerRadius = context.resources.getDimension(R.dimen.card_corner_radius)
         background.setBounds(
-            itemView.left + cardMargin,
+            itemView.right + dX.toInt() - cardMargin - cardCornerRadius.toInt() * 2,
             itemView.top + cardMargin,
-            itemView.left + dX.toInt() + cardMargin + cardCornerRadius.toInt() * 2,
+            itemView.right - cardMargin,
             itemView.bottom - cardMargin
         )
         background.setCornerRadius(cardCornerRadius)
@@ -110,15 +121,12 @@ class SwipeController(
         val deleteIconMargin = context.resources.getDimension(R.dimen.delete_button_margin).toInt()
         val deleteIconTop =
             itemView.top + (itemHeight - intrinsicHeight) / 2
-        val deleteIconLeft = itemView.left + deleteIconMargin
-        val deleteIconRight = itemView.left + deleteIconMargin + intrinsicWidth
+        val deleteIconLeft = itemView.right - deleteIconMargin - intrinsicWidth
+        val deleteIconRight = itemView.right - deleteIconMargin
         val deleteIconBottom = deleteIconTop + intrinsicHeight
         deleteDrawable?.setTint(context.getColor(R.color.white))
         deleteDrawable?.setBounds(deleteIconLeft, deleteIconTop, deleteIconRight, deleteIconBottom)
         deleteDrawable?.draw(c)
-    }
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
     }
 
     private fun clearCanvas(
@@ -144,19 +152,19 @@ class SwipeController(
         recyclerView: RecyclerView,
         viewHolder: RecyclerView.ViewHolder,
         dX: Float,
-        dY: Float
     ) {
         recyclerView.setOnTouchListener { _, event ->
             swipeBack =
                 event.action == MotionEvent.ACTION_CANCEL || event.action == MotionEvent.ACTION_UP
-            if (swipeBack && dX > 0) {
-                swipeControllerActions.onDelete(viewHolder.adapterPosition)
+            if (swipeBack && dX < 0) {
+                itemTouchHelperAdapter.onDelete(viewHolder.adapterPosition)
             }
             false
         }
     }
 
-    interface SwipeControllerActions {
+    interface ItemTouchHelperAdapter {
         fun onDelete(position: Int)
+        fun onItemMove(fromPosition: Int, toPosition: Int)
     }
 }

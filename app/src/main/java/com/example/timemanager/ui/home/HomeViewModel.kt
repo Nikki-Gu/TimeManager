@@ -33,6 +33,8 @@ class HomeViewModel @Inject constructor(
 
     val sheetSelectedId: LiveData<Int> = userPreferencesRepository.sheetSelected().asLiveData()
 
+    private val sortInfo: LiveData<String> = userPreferencesRepository.sortInfo().asLiveData()
+
     @kotlinx.coroutines.ExperimentalCoroutinesApi
     // 如果没有flatMapLatest则会有延迟,因为是flow？
     val sheetSelected: LiveData<Sheet?> =
@@ -127,6 +129,7 @@ class HomeViewModel @Inject constructor(
     fun setTimingTaskId(value: Int) {
         timingTaskId.value = value
     }
+
     private var timingTaskName = MutableLiveData<String>()
     fun getTimingTaskName() = timingTaskName.value
     fun setTimingTaskName(value: String) {
@@ -152,4 +155,23 @@ class HomeViewModel @Inject constructor(
         emit(recordRepository.insertRecord(record))
     }
 
+    fun setSortInfo(list: List<Task>) {
+        val sortInfo = list.map { it.id.toString() }.joinToString(",")
+        viewModelScope.launch {
+            userPreferencesRepository.setSortInfo(sortInfo)
+        }
+    }
+
+    fun sortByInfo(list: List<Task?>): List<Task?> {
+        val infoList = sortInfo.value.let {
+            it?.split(",")?.toList()?.map { id -> id.toInt() }
+        }
+        infoList ?: return list
+        val sortedList = mutableListOf<Task>()
+        for (i in infoList) {
+            val task = list.find { it?.id == i }
+            task?.let { sortedList.add(it) }
+        }
+        return sortedList
+    }
 }

@@ -137,7 +137,6 @@ class AddTaskFragment : Fragment() {
         if (!validateTaskName()) {
             return
         }
-        R.layout.support_simple_spinner_dropdown_item
         val name = binding.taskNameEditText.text.toString()
         val description = binding.taskDescriptionEditText.text.toString()
         val rank = when (binding.rank.selectedItem.toString()) {
