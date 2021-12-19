@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
 import com.example.timemanager.R
 import com.example.timemanager.databinding.CalendarDayLayoutBinding
 import com.example.timemanager.databinding.FragmentAnalysisBinding
@@ -111,8 +112,22 @@ class AnalysisFragment : Fragment() {
             selectDate(it.yearMonth.atDay(1))
         }
 
+
+
+        ///////////////// 测试
         val sumFocusData1=binding.sumFocusData1
-        //sumFocusData1 = 某个数据库接口
+//        val sumFocusData1LiveData=analysisViewModel.timesTillNow
+        val sumFocusData1LiveData=analysisViewModel.durationTillNow
+//        sumFocusData1LiveData.observe(viewLifecycleOwner, Observer<Int?> {sumFocusData1.text=it.toString()})
+        sumFocusData1LiveData.observe(viewLifecycleOwner, Observer<Long?> {sumFocusData1.text=it.toString()})
+        /////////////////
+
+
+
+
+
+//        val sumFocusData1=binding.sumFocusData1
+//        sumFocusData1 = 某个数据库接口
         val todayFocusData1=binding.todayFocusData1
 
         return root

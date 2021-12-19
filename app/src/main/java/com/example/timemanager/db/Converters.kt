@@ -38,12 +38,15 @@ class Converters {
         name?.let { enumValueOf<TaskState>(it) } ?: TaskState.DOING
 
     @TypeConverter
-    fun toDate(value: Long?): Date? {
-        return value?.let { Date(value) }
+    fun toDate(timestamp: Long?): Date? {
+        return when (timestamp) {
+            null -> null
+            else -> Date(timestamp)
+        }
     }
 
     @TypeConverter
-    fun fromDate(value: Date?): Long? {
-        return value?.time
+    fun toTimestamp(date: Date?): Long? {
+        return date?.time
     }
 }

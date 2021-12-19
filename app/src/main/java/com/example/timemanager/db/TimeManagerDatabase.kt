@@ -30,7 +30,7 @@ abstract class TimeManagerDatabase : RoomDatabase() {
 
     abstract fun userDao(): UserDao
 
-    abstract  fun recordDao(): RecordDao
+    abstract fun recordDao(): RecordDao
 
     companion object {
         @Volatile
