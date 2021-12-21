@@ -25,11 +25,11 @@ class AnalysisViewModel @Inject constructor(
 
     fun timesOfDate(date: Date): LiveData<Int> = recordRepository.getTimesByDate(date).asLiveData()
 
-    val timesTillNow: LiveData<Int> = recordRepository.getTimesTillNow().asLiveData()
+    fun timesTillNow(): LiveData<Int> = recordRepository.getTimesTillNow().asLiveData()
 
     fun durationOfDate(date: Date): LiveData<Long> = recordRepository.getDurationByDate(date).asLiveData()
 
-    val durationTillNow: LiveData<Long> = recordRepository.getDurationTillNow().asLiveData()
+    fun durationTillNow(): LiveData<Long> = recordRepository.getDurationTillNow().asLiveData()
 
     fun recordOfDate(date: Date): LiveData<Record?> = recordRepository.getRecordByDate(date).asLiveData()
 }

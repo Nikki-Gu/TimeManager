@@ -10,8 +10,6 @@ import com.example.timemanager.db.Converters
 import kotlinx.coroutines.flow.map
 import java.util.*
 
-val dateTo: Date = Calendar.getInstance().time
-
 val dateStart: Date = Date(1500000000000)
 
 
@@ -22,11 +20,11 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getTimesByDate(date: Date) = recordDao.getTimesBetweenDate(Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0), Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59))
 
-    fun getTimesTillNow() = recordDao.getTimesBetweenDate(dateStart, dateTo)
+    fun getTimesTillNow() = recordDao.getTimesBetweenDate(dateStart, Calendar.getInstance().time)
 
     fun getDurationByDate(date: Date) = recordDao.getDurationBetweenDate(Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0), Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59))
 
-    fun getDurationTillNow() = recordDao.getDurationBetweenDate(dateStart, dateTo)
+    fun getDurationTillNow() = recordDao.getDurationBetweenDate(dateStart, Calendar.getInstance().time)
 
     fun getRecordByDate(date: Date) = recordDao.getRecordBetweenDate(Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0), Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59)).map { it.toDomain() }
 
