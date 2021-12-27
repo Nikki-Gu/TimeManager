@@ -6,6 +6,7 @@ import com.example.timemanager.db.model.Record
 import com.example.timemanager.repository.mapper.RecordMapper.toDomain
 import com.example.timemanager.repository.mapper.RecordMapper.toEntity
 import com.example.timemanager.db.Converters
+import kotlinx.coroutines.flow.Flow
 
 import kotlinx.coroutines.flow.map
 import java.util.*
@@ -26,11 +27,11 @@ class RecordRepository(private val recordDao: RecordDao) {
 
     fun getDurationTillNow() = recordDao.getDurationBetweenDate(dateStart, Calendar.getInstance().time)
 
-    fun getRecordByDate(date: Date) = recordDao.getRecordBetweenDate(Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0), Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59)).map { it.toDomain() }
+    fun getRecordByDate(date: Date): Flow<List<Record?>> = recordDao.getRecordBetweenDate(Date(date.getYear(), date.getMonth(), date.getDate(), 0, 0), Date(date.getYear(), date.getMonth(), date.getDate(), 23, 59)).map { it.toDomain() }
 
     fun getRecordById(id: Int) = recordDao.getRecordById(id).map { it.toDomain() }
 
-    fun getAllRecord() = recordDao.getAllRecord().map { it.toDomain() }
+    fun getAllRecord(): Flow<List<Record?>> = recordDao.getAllRecord().map { it.toDomain() }
 
     suspend fun insertRecord(record: Record) = record.toEntity()?.let { recordDao.insertRecord(it) }
 

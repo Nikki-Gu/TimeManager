@@ -219,25 +219,13 @@ class AnalysisFragment : Fragment() {
                 selectedFocusData2.text=secondToString(it)
             }
         })
-        // recordOfDate现在的实现有问题，返回的是查询当日的第一个Record，而不是当日的所有Record
-        // 改动时希望recordOfDate返回List<Record>，包含当日的所有Record
-        // 改好之后，1. 先把下面这行的Observer<Record?>改成Observer<List<Record>?>
-//        analysisViewModel.recordOfDate(Date.from(zonedDateTime.toInstant())).observe(viewLifecycleOwner, Observer<Record?> {
-//            if (it != null) {
-//        // 2. 把下面这行改成   var recordList = it
-//                var recordList = listOf<Record>(it,it,it,it,it,it,it,it,it,it,it)
-//                adapter.submitList(recordList)
-//            }
-//            else {
-//                var empty = Record(0,0,"无当日数据",0L,false,null)
-//                var recordList = listOf<Record>(empty)
-//                adapter.submitList(recordList)
-//            }
-//        })
         analysisViewModel.recordOfDate(Date.from(zonedDateTime.toInstant())).observe(viewLifecycleOwner, Observer<List<Record?>> {
             if (it != null) {
-                // 2. 把下面这行改成   var recordList = it
                 var recordList = it
+                if (it.isEmpty()){
+                    var empty = Record(0,0,"无当日数据",0L,false,null)
+                    recordList = listOf<Record>(empty)
+                }
                 adapter.submitList(recordList)
             }
             else {
