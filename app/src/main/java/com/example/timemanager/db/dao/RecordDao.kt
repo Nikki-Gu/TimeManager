@@ -30,13 +30,13 @@ interface RecordDao {
     fun getDurationBetweenDate(date1: Date, date2: Date): Flow<Long>
 
     @Query("SELECT * FROM record WHERE date BETWEEN :date1 AND :date2")
-    fun getRecordBetweenDate(date1: Date, date2: Date): Flow<RecordEntity>
+    fun getRecordBetweenDate(date1: Date, date2: Date): Flow<List<RecordEntity>>
 
     @Query("SELECT * FROM record WHERE id = :id")
-    fun getRecordById(id: Int): Flow<RecordEntity>
+    fun getRecordById(id: Int): Flow<List<RecordEntity>>
 
     @Query("SELECT * FROM record")
-    fun getAllRecord(): Flow<RecordEntity>
+    fun getAllRecord(): Flow<List<RecordEntity>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertRecord(record: RecordEntity): Long

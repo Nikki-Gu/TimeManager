@@ -4,15 +4,21 @@ import com.example.timemanager.db.entity.RecordEntity
 import com.example.timemanager.db.model.Record
 
 object RecordMapper {
-    fun RecordEntity?.toDomain(): Record? = this?.let{
-        Record(
-            id = it.id,
-            taskId = it.taskid,
-            taskName = it.taskName,
-            date = it.date,
-            isInterrupt = it.isInterrupt,
-            duration = it.duration
-        )
+    fun List<RecordEntity>.toDomain(): List<Record?>{
+        var result = mutableListOf <Record?>()
+        for(value in this){
+            result.add(
+                Record(
+                id = value.id,
+                taskId = value.taskid,
+                taskName = value.taskName,
+                date = value.date,
+                isInterrupt = value.isInterrupt,
+                duration = value.duration
+                )
+            )
+        }
+        return result
     }
 
     fun Record?.toEntity(): RecordEntity? = this?.let{

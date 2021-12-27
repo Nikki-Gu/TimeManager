@@ -144,9 +144,9 @@ class HomeViewModel @Inject constructor(
         recordRepository.deleteRecord(id)
     }
 
-    fun getRecordById(id: Int): LiveData<Record?> = recordRepository.getRecordById(id).asLiveData()
+    fun getRecordById(id: Int): LiveData<List<Record?>> = recordRepository.getRecordById(id).asLiveData()
 
-    val allRecord: LiveData<Record?> = recordRepository.getAllRecord().asLiveData()
+    val allRecord: LiveData<List<Record?>> = recordRepository.getAllRecord().asLiveData()
 
     fun insertRecord(record: Record) = liveData {
         emit(recordRepository.insertRecord(record))

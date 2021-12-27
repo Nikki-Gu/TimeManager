@@ -32,5 +32,5 @@ class AnalysisViewModel @Inject constructor(
 
     fun durationTillNow(): LiveData<Long> = recordRepository.getDurationTillNow().asLiveData()
 
-    fun recordOfDate(date: Date): LiveData<Record?> = recordRepository.getRecordByDate(date).asLiveData()
+    fun recordOfDate(date: Date): LiveData<List<Record?>> = recordRepository.getRecordByDate(date).asLiveData()
 }
