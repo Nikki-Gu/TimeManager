@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
+import com.example.timemanager.db.entity.RecordEntity
 import com.example.timemanager.db.model.Record
 import com.example.timemanager.db.model.Sheet
 import com.example.timemanager.db.model.Task
