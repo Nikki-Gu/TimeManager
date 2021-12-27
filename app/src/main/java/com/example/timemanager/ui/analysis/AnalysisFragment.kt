@@ -9,11 +9,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.timemanager.R
 import com.example.timemanager.databinding.CalendarDayLayoutBinding
 import com.example.timemanager.databinding.FragmentAnalysisBinding
 import com.example.timemanager.db.dao.RecordDao
+import com.example.timemanager.db.model.Record
 import com.example.timemanager.di.RepositoryModule
+import com.example.timemanager.ui.home.adapter.RecordsAdapter
 import com.kizitonwose.calendarview.model.CalendarDay
 import com.kizitonwose.calendarview.model.DayOwner
 import com.kizitonwose.calendarview.ui.DayBinder
@@ -21,6 +25,8 @@ import com.kizitonwose.calendarview.ui.ViewContainer
 import dagger.hilt.android.AndroidEntryPoint
 import java.time.LocalDate
 import java.time.YearMonth
+import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.WeekFields
 import java.util.*
@@ -44,6 +50,8 @@ class AnalysisFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    val adapter = RecordsAdapter()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -112,10 +120,76 @@ class AnalysisFragment : Fragment() {
         }
 
         val sumFocusData1=binding.sumFocusData1
-        //sumFocusData1 = 某个数据库接口
+        val sumFocusData2=binding.sumFocusData2
+        val sumFocusData3=binding.sumFocusData3
         val todayFocusData1=binding.todayFocusData1
+        val todayFocusData2=binding.todayFocusData2
 
+        var times = -1
+        var duration = -1L
+
+        analysisViewModel.timesTillNow().observe(viewLifecycleOwner, Observer<Int?> {
+            if (it != null){
+                times = it
+            }
+            else{
+                times = 0
+            }
+            sumFocusData1.text=times.toString()
+            if (times != -1 && duration != -1L) {
+                if (times == 0) {
+                    sumFocusData3.text="0秒"
+                }
+                else {
+                    sumFocusData3.text=secondToString(duration/times)
+                }
+            }
+        })
+        analysisViewModel.durationTillNow().observe(viewLifecycleOwner, Observer<Long?> {
+            if (it == null) {
+                duration=0
+            }
+            else{
+                duration=it
+            }
+            sumFocusData2.text=secondToString(duration)
+            if (times != -1 && duration != -1L){
+                if (times == 0) {
+                    sumFocusData3.text="0秒"
+                }
+                else {
+                    sumFocusData3.text=secondToString(duration/times)
+                }
+            }
+        })
+        analysisViewModel.timesOfDate(Calendar.getInstance().time).observe(viewLifecycleOwner, Observer<Int?> {todayFocusData1.text=it.toString()})
+        analysisViewModel.durationOfDate(Calendar.getInstance().time).observe(viewLifecycleOwner, Observer<Long?> {
+            if (it == null) {
+                todayFocusData2.text="0秒"
+            }
+            else{
+                todayFocusData2.text=secondToString(it)
+            }
+        })
+        val recyclerView=binding.tasksRecyclerView
+        recyclerView.layoutManager=LinearLayoutManager(context)
+        recyclerView.adapter = adapter
         return root
+    }
+
+    private fun secondToString(seconds: Long): String {
+        if (seconds == 0L || seconds == null){
+            return "0秒"
+        }
+        var s = ""
+        if (seconds > 3600) {
+            s += (seconds/3600).toString() + "时 "
+        }
+        if (seconds > 60) {
+            s += ((seconds-(seconds/3600)*3600)/60).toString() + "分 "
+        }
+        s += (seconds%60).toString() + "秒"
+        return s
     }
 
     private fun selectDate(date: LocalDate) {
@@ -129,12 +203,37 @@ class AnalysisFragment : Fragment() {
     }
 
     private fun updateAdapterForDate(date: LocalDate) {
-        /*eventsAdapter.apply {
-            events.clear()
-            events.addAll(this@Example3Fragment.events[date].orEmpty())
-            notifyDataSetChanged()
-        }*/
         binding.date.text = selectionFormatter.format(date)
+        val selectedFocusData1=binding.selectedFocusData1
+        val selectedFocusData2=binding.selectedFocusData2
+        val dateOffset = date.plusDays(1)
+        val zonedDateTime = dateOffset.atStartOfDay(ZoneOffset.ofHours(8))
+        analysisViewModel.timesOfDate(Date.from(zonedDateTime.toInstant())).observe(viewLifecycleOwner, Observer<Int?> {
+            selectedFocusData1.text=it.toString()
+        })
+        analysisViewModel.durationOfDate(Date.from(zonedDateTime.toInstant())).observe(viewLifecycleOwner, Observer<Long?> {
+            if (it == null) {
+                selectedFocusData2.text="0秒"
+            }
+            else{
+                selectedFocusData2.text=secondToString(it)
+            }
+        })
+        analysisViewModel.recordOfDate(Date.from(zonedDateTime.toInstant())).observe(viewLifecycleOwner, Observer<List<Record?>> {
+            if (it != null) {
+                var recordList = it
+                if (it.isEmpty()){
+                    var empty = Record(0,0,"无当日数据",0L,false,null)
+                    recordList = listOf<Record>(empty)
+                }
+                adapter.submitList(recordList)
+            }
+            else {
+                var empty = Record(0,0,"无当日数据",0L,false,null)
+                var recordList = listOf<Record>(empty)
+                adapter.submitList(recordList)
+            }
+        })
     }
 
     override fun onDestroyView() {

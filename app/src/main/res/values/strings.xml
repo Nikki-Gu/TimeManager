@@ -37,4 +37,5 @@
     <string name="sum_length">总时长</string>
     <string name="avg_length">平均时长</string>
     <string name="calendar">日历</string>
+    <string name="todayStatus">本日完成情况</string>
 </resources>

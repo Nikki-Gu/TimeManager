@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
+                android:paddingHorizontal="8dp"
                 android:paddingTop="@dimen/recycler_view_padding_top"
                 android:paddingBottom="@dimen/recycler_view_padding_bottom"
                 android:orientation="vertical">
@@ -34,7 +35,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="300dp"
                     android:text="@string/sum_focus"
                     android:textSize="24sp"
                     android:textStyle="bold"/>
@@ -116,7 +116,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="300dp"
                     android:text="@string/today_focus"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -181,7 +180,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="300dp"
                     android:text="@string/calendar"
                     android:textSize="24sp"
                     android:textStyle="bold"/>
@@ -191,6 +189,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
+                    android:layout_marginLeft="4dp"
                     android:text="@string/zero"
                     android:textSize="16sp"/>
 
@@ -256,6 +255,27 @@
                         android:textSize="16sp"/>
 
             </LinearLayout>
+
+            <TextView
+                    android:id="@+id/title4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/todayStatus"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+            <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/tasks_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingTop="@dimen/recycler_view_padding_top"
+                    android:paddingBottom="@dimen/recycler_view_padding_bottom"
+                    app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+                    tools:itemCount="1"
+                    tools:listitem="@layout/item_record" />
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

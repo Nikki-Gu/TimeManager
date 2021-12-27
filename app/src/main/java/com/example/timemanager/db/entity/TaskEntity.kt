@@ -26,7 +26,7 @@ data class TaskEntity(
     var name: String,
     var description: String?,
     var state: TaskState,
-    @ColumnInfo(name = "sheet_id") var sheetId: Int,
+    @ColumnInfo(name = "sheet_id", index = true) var sheetId: Int,
     var startDate: Date?,//时间类型暂时用long存储
     var endDate: Date?,
     var rank: Int?,//等级，重要紧急
